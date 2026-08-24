@@ -1,7 +1,7 @@
-import { IRepository } from "../../Entities/Manga/IMangaRepository";
+import { IRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
-import { ValidationException } from "../../Entities/Common/Exceptions/ValidationException";
-import { MangaException } from "../../Entities/Common/Exceptions/MangaException";
+import { ValidationException } from "../../Entities/Exceptions/ValidationException";
+import { MangaException } from "../../Entities/Exceptions/MangaException";
 
 export class GetByIdMangaUseCase {
     private mangaRepository: IRepository<Manga>;

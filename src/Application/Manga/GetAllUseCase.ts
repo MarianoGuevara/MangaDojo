@@ -1,4 +1,4 @@
-import { IRepository } from "../../Entities/Manga/IMangaRepository";
+import { IRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
 
 export class GetAllMangaUseCase {

@@ -1,5 +1,5 @@
 import { Volume } from "./Volume";
-import { ValidationException } from "./Common/Exceptions/ValidationException";
+import { ValidationException } from "./Exceptions/ValidationException";
 
 export class Manga {
     private _id: number;

@@ -1,4 +1,31 @@
-Librerias externas:
--Express (api rest)
--Awilix (inyección de dependencias)
--Mysql2 (sql)
+# Manga Dojo
+
+Api rest hecha con typescript y SQL organizada con Clean Architecture
+
+## Descripción
+* Manga dojo es una aplicación hecha para poner en práctica la arquitectura limpia
+* Es una aplicación real; separa el front end y el backend en 2 módulos distintos
+* La finalidad de la aplicación es funcionar como una página para que los usuarios se creen una cuenta y tengan en ella toda la colección de mangas que han leido, dejando reseñas de los mismos y calificandolos. Al mismo tiempo, esto impulsa el negocio principal de la empresa; la venta de mangas, que se puede realizar desde la misma sección desde donde el usuario deja su reseña de la obra.
+
+
+
+## Funcionalidades (end points)
+* 
+
+
+## Capas
+
+### Entities
+* 
+
+
+### Entry point:
+* Establece configuraciones de todos los frameworks y librerías de terceros, siendo el orquestador de estos recursos
+
+
+---
+
+### Librerias externas:
+* Express (api rest)
+* Awilix (inyección de dependencias)
+* Mysql2 (sql)

@@ -1,5 +1,5 @@
 import { createContainer, asClass, InjectionMode } from "awilix";
-import { IMangaRepository } from "../Entities/Manga/IMangaRepository";
+import { IMangaRepository } from "../Application/Manga/IMangaRepository";
 
 const container = createContainer({
   injectionMode: InjectionMode.PROXY
