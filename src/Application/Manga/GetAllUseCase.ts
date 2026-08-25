@@ -1,15 +1,14 @@
-import { IRepository } from "./IMangaRepository";
+import { IMangaRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
 
-export class GetAllMangaUseCase {
-    private mangaRepository: IRepository<Manga>;
+export class GetAllMangaUseCase<T> {
+    private mangaRepository: IMangaRepository<T>;
     
-    constructor(mangaRepository: IRepository<Manga>) {
+    constructor(mangaRepository: IMangaRepository<T>) {
         this.mangaRepository = mangaRepository;
     }
    
-    async execute(): Promise<Manga[]> {
-        // 
+    async execute(): Promise<T[]> {
         const mangas = await this.mangaRepository.getAll();
         return mangas; 
     }

@@ -10,8 +10,12 @@ Api rest hecha con typescript y SQL organizada con Clean Architecture
 
 
 ## Funcionalidades (end points)
-* 
 
+### MANGAS 
+
+#### Get
+* api/mangas: Trae todos los mangas de la base de datos
+* 
 
 ## Capas
 
@@ -29,3 +33,4 @@ Api rest hecha con typescript y SQL organizada con Clean Architecture
 * Express (api rest)
 * Awilix (inyección de dependencias)
 * Mysql2 (sql)
+* Dotenv (para seguridad)

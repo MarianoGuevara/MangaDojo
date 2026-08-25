@@ -1,12 +1,20 @@
-import { createContainer, asClass, InjectionMode } from "awilix";
+import { createContainer, asClass, asValue, InjectionMode } from "awilix";
 import { IMangaRepository } from "../Application/Manga/IMangaRepository";
+import { MangaRepository } from "./MySql/MangaRepository";
+import { MangaController } from "../InterfaceAdapter/MangaController";
+import { GetAllMangaUseCase } from "../Application/Manga/GetAllUseCase";
+import {pool} from "./MySql/MySqlPool";
 
 const container = createContainer({
-  injectionMode: InjectionMode.PROXY
+  injectionMode: InjectionMode.CLASSIC
 });
 
 container.register({
-//   mangaRepository: asClass(MySqlMangaRepository).singleton(),
+    pool: asValue(pool),
+
+    mangaController: asClass(MangaController).singleton(),
+    mangaRepository: asClass(MangaRepository).singleton(),
+    getAllMangaUseCase: asClass(GetAllMangaUseCase).singleton()
 });
 
 export { container };
