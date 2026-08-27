@@ -1,4 +1,7 @@
-export interface IMangaRepository<T> {
-    getAll(): Promise<T[]>;
-    getById(id: number): Promise<T | null>;
+import { Manga } from "../../Entities/Manga";
+
+export interface IMangaRepository {
+    getAll(): Promise<Manga[]>;
+    getById(id: number): Promise<Manga>;
+    insertOne(manga: Manga): Promise<Manga>;
 }

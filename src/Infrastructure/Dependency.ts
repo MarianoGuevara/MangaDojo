@@ -1,8 +1,10 @@
 import { createContainer, asClass, asValue, InjectionMode } from "awilix";
-import { IMangaRepository } from "../Application/Manga/IMangaRepository";
 import { MangaRepository } from "./MySql/MangaRepository";
 import { MangaController } from "../InterfaceAdapter/MangaController";
 import { GetAllMangaUseCase } from "../Application/Manga/GetAllUseCase";
+import { InsertOneMangaUseCase } from "../Application/Manga/InsertOneUseCase";
+import { MangaMapperModel } from "../InterfaceAdapter/MangaMapperModel";
+
 import {pool} from "./MySql/MySqlPool";
 
 const container = createContainer({
@@ -14,7 +16,11 @@ container.register({
 
     mangaController: asClass(MangaController).singleton(),
     mangaRepository: asClass(MangaRepository).singleton(),
-    getAllMangaUseCase: asClass(GetAllMangaUseCase).singleton()
+
+	mapperMangaModel: asClass(MangaMapperModel).singleton(),
+
+    getAllMangasUseCase: asClass(GetAllMangaUseCase).singleton(),
+	insertOneMangaUseCase: asClass(InsertOneMangaUseCase).singleton(),
 });
 
 export { container };

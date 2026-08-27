@@ -3,6 +3,8 @@ import { mangaRoutes } from './Express/MangaRoutes';
 import { container } from "./Dependency";
 import { MangaController } from '../InterfaceAdapter/MangaController';
 import { MangaRepository } from './MySql/MangaRepository';
+import { MangaMapperModel } from '../InterfaceAdapter/MangaMapperModel';
+import { errorHandler } from './Express/middleware';
 
 // App express
 const app = express();
@@ -11,7 +13,8 @@ app.use(express.json());
 
 // Dependencias
 const mangaController = container.resolve<MangaController>("mangaController");
-const repository = container.resolve<MangaRepository>("mangaRepository");
+container.resolve<MangaRepository>("mangaRepository");
+container.resolve<MangaMapperModel>("mapperMangaModel");
 
 
 // Routes
@@ -21,8 +24,8 @@ app.use('/api/mangas', mangaRoutesInstance);
 
 
 // Middleware global de errores
-// app.use(errorHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  	console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

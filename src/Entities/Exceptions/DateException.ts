@@ -1,6 +1,6 @@
-export class MangaException extends Error {
+export class DateException extends Error {
     constructor(message: string) {
         super(message);
-        code: 401;
+        // code: 401;
     }
 }

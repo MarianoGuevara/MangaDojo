@@ -1,18 +1,37 @@
 import { GetAllMangaUseCase } from "../Application/Manga/GetAllUseCase";
+import { InsertOneMangaRequestDto, InsertOneMangaUseCase } from "../Application/Manga/InsertOneUseCase";
 import { IController } from "./Interfaces/IController";
 import { IHttpRequest } from "./Interfaces/IHttpRequest";
 import { IHttpResponse } from "./Interfaces/IHttpResponse";
 
 export class MangaController implements IController {
-    private getAllMangaUseCase: GetAllMangaUseCase<MangaDto>;
+    private getAllMangasUseCase: GetAllMangaUseCase;
+    private insertOneMangaUseCase: InsertOneMangaUseCase;
 
-    constructor(getAllMangaUseCase: GetAllMangaUseCase<MangaDto>) {
-        this.getAllMangaUseCase = getAllMangaUseCase;
+    constructor(getAllMangasUseCase: GetAllMangaUseCase,
+                insertOneMangaUseCase: InsertOneMangaUseCase
+    ) {
+        this.getAllMangasUseCase = getAllMangasUseCase;
+        this.insertOneMangaUseCase = insertOneMangaUseCase;
     }
 
     async getAll(req: IHttpRequest): Promise<IHttpResponse> 
     {
-        const mangas = await this.getAllMangaUseCase.execute();
-        return { statusCode: 200, body: mangas };
+        const mangas = await this.getAllMangasUseCase.execute();
+        return { 
+            statusCode: 200, 
+            body: mangas 
+        } as IHttpResponse;
+    }
+
+    async insertOne(req: IHttpRequest): Promise<IHttpResponse> {
+        const mangaDto = req.body as InsertOneMangaRequestDto;
+
+        const insertedManga = await this.insertOneMangaUseCase.execute(mangaDto);
+
+        return { 
+            statusCode: 201, 
+            body: insertedManga 
+        } as IHttpResponse;
     }
 }

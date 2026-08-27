@@ -1,15 +1,31 @@
 import { IMangaRepository } from "./IMangaRepository";
-import { Manga } from "../../Entities/Manga";
 
-export class GetAllMangaUseCase<T> {
-    private mangaRepository: IMangaRepository<T>;
+export interface GetAllMangaResponseDto {
+    title: string;
+    description: string;
+    author: string;
+    startDate: Date;
+    endDate: Date;
+}
+
+export class GetAllMangaUseCase {
+    private mangaRepository: IMangaRepository;
     
-    constructor(mangaRepository: IMangaRepository<T>) {
+    constructor(mangaRepository: IMangaRepository) {
         this.mangaRepository = mangaRepository;
     }
    
-    async execute(): Promise<T[]> {
+    async execute(): Promise<GetAllMangaResponseDto[]> {
         const mangas = await this.mangaRepository.getAll();
-        return mangas; 
+
+        const responseDtos = mangas.map(manga => ({
+            title: manga.title,
+            description: manga.description,
+            author: manga.author,
+            startDate: manga.startDate,
+            endDate: manga.endDate
+        }) as GetAllMangaResponseDto);
+
+        return responseDtos;
     }
 }

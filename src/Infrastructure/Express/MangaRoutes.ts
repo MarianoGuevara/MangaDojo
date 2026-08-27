@@ -15,5 +15,12 @@ export const mangaRoutes = (mangaController: MangaController): Router => {
       }
   );
 
+  router.post("/", async (req, res) => 
+      {
+          const httpRequest = ExpressMapper.toHttpRequest(req);
+          const httpResponse = await mangaController.insertOne(httpRequest);
+          ExpressMapper.toExpressResponse(res, httpResponse);
+      }
+  );
   return router;
 };

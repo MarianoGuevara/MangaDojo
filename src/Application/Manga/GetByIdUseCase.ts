@@ -1,27 +1,15 @@
-import { IRepository } from "./IMangaRepository";
+import { IMangaRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
 import { ValidationException } from "../../Entities/Exceptions/ValidationException";
-import { MangaException } from "../../Entities/Exceptions/MangaException";
 
 export class GetByIdMangaUseCase {
-    private mangaRepository: IRepository<Manga>;
+    private mangaRepository: IMangaRepository;
     
-    constructor(mangaRepository: IRepository<Manga>) {
+    constructor(mangaRepository: IMangaRepository) {
         this.mangaRepository = mangaRepository;
     }
     
     async execute(id: number): Promise<Manga> {
-        if (id <= 0) {
-            throw new ValidationException("Id must be greater than 0");
-        }
-
-        const manga = await this.mangaRepository.getById(id);
-
-        // !manga -> manga is null or undefined
-        if (!manga) {
-            throw new MangaException("Manga not found");
-        }
-
-        return manga;
+        throw new ValidationException("GetByIdMangaUseCase is not implemented yet");
     }
 }
