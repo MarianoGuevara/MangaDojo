@@ -16,16 +16,28 @@ Api rest hecha con typescript y SQL organizada con Clean Architecture
 #### Get
 * api/mangas: Trae todos los mangas de la base de datos
 * 
-
-## Capas
-
-### Entities
+#### Post
+* api/mangas: Permite dar de alta un nuevo manga ingresando por body información clave
 * 
 
+---
+
+## Capas
 
 ### Entry point:
 * Establece configuraciones de todos los frameworks y librerías de terceros, siendo el orquestador de estos recursos
 
+### Entities
+* 
+
+### Use cases
+* 
+
+### Interface adapters
+* 
+
+### Infrastructure
+* 
 
 ---
 

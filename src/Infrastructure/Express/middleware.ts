@@ -8,7 +8,7 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
     } else if (err instanceof DateException) {
         res.status(400).json({ error: err.message });
     } else {
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error " + err.message });
     }
 }
 

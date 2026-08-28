@@ -3,7 +3,8 @@ import { mangaRoutes } from './Express/MangaRoutes';
 import { container } from "./Dependency";
 import { MangaController } from '../InterfaceAdapter/MangaController';
 import { MangaRepository } from './MySql/MangaRepository';
-import { MangaMapperModel } from '../InterfaceAdapter/MangaMapperModel';
+import { MangaWithAuthorMapper } from '../InterfaceAdapter/MangaWithAuthorMapper';
+import { MangaMapper } from '../InterfaceAdapter/MangaMapper';
 import { errorHandler } from './Express/middleware';
 
 // App express
@@ -14,8 +15,9 @@ app.use(express.json());
 // Dependencias
 const mangaController = container.resolve<MangaController>("mangaController");
 container.resolve<MangaRepository>("mangaRepository");
-container.resolve<MangaMapperModel>("mapperMangaModel");
 
+container.resolve<MangaWithAuthorMapper>("mapperMangaWithAuthor");
+container.resolve<MangaMapper>("mapperManga");
 
 // Routes
 const mangaRoutesInstance = mangaRoutes(mangaController);

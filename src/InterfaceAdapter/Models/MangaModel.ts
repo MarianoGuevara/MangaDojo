@@ -1,17 +1,21 @@
 export class MangaModel {
     id: number;
     title: string;
-    author: string;
     description: string;
-    startDate: Date;
-    endDate: Date | null;
+    start_date: Date;
+    end_date: Date | null;
+    total_volumes: number;
+    total_rating: number;
+    mangas_id_author: number;
 
-    constructor(id: number, title: string, author: string, description: string, startDate: Date, endDate: Date | null) {
+    constructor(id: number, title: string, description: string, start_date: Date, end_date: Date | null, total_volumes: number, total_rating: number, mangas_id_author: number) {
         this.id = id;
         this.title = title;
-        this.author = author;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.total_volumes = total_volumes;
+        this.total_rating = total_rating;
+        this.mangas_id_author = mangas_id_author;
     }
 }

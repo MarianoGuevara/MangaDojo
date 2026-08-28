@@ -3,7 +3,8 @@ import { MangaRepository } from "./MySql/MangaRepository";
 import { MangaController } from "../InterfaceAdapter/MangaController";
 import { GetAllMangaUseCase } from "../Application/Manga/GetAllUseCase";
 import { InsertOneMangaUseCase } from "../Application/Manga/InsertOneUseCase";
-import { MangaMapperModel } from "../InterfaceAdapter/MangaMapperModel";
+import { MangaMapper } from "../InterfaceAdapter/MangaMapper";
+import { MangaWithAuthorMapper } from "../InterfaceAdapter/MangaWithAuthorMapper";
 
 import {pool} from "./MySql/MySqlPool";
 
@@ -17,7 +18,8 @@ container.register({
     mangaController: asClass(MangaController).singleton(),
     mangaRepository: asClass(MangaRepository).singleton(),
 
-	mapperMangaModel: asClass(MangaMapperModel).singleton(),
+	mapperMangaWithAuthor: asClass(MangaWithAuthorMapper).singleton(),
+    mapperManga: asClass(MangaMapper).singleton(),
 
     getAllMangasUseCase: asClass(GetAllMangaUseCase).singleton(),
 	insertOneMangaUseCase: asClass(InsertOneMangaUseCase).singleton(),

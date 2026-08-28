@@ -5,7 +5,9 @@ export interface GetAllMangaResponseDto {
     description: string;
     author: string;
     startDate: Date;
-    endDate: Date;
+    endDate: Date | null;
+    totalVolumes: number;
+    totalRating: number; 
 }
 
 export class GetAllMangaUseCase {
@@ -21,9 +23,11 @@ export class GetAllMangaUseCase {
         const responseDtos = mangas.map(manga => ({
             title: manga.title,
             description: manga.description,
-            author: manga.author,
+            author: manga.author.name + " " + manga.author.surname,
             startDate: manga.startDate,
-            endDate: manga.endDate
+            endDate: manga.endDate,
+            totalVolumes: manga.totalVolumes,
+            totalRating: manga.totalRating,
         }) as GetAllMangaResponseDto);
 
         return responseDtos;

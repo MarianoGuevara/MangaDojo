@@ -1,13 +1,16 @@
 import { IMangaRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
 import { IMapper } from "../Interfaces/IMapper";
+import { Author } from "../../Entities/Author";
 
 export interface InsertOneMangaRequestDto {
     title: string;
     description: string;
-    author: string;
+    authorId : number;
     startDate: Date;
     endDate: Date | null;
+    totalVolumes: number;
+    totalRating: number;
 }
 
 export interface InsertOneMangaResponseDto {
@@ -16,26 +19,34 @@ export interface InsertOneMangaResponseDto {
 
 export class InsertOneMangaUseCase {
     private mangaRepository: IMangaRepository;
-  
+    // private authorRepository: AuthorRepository;
 
     constructor(mangaRepository: IMangaRepository) {
         this.mangaRepository = mangaRepository;
+        
     }
 
     async execute(mangaDto: InsertOneMangaRequestDto): Promise<InsertOneMangaResponseDto> {
 
-        const manga = new Manga(
-            mangaDto.title,
-            mangaDto.description,
-            mangaDto.author,
-            mangaDto.startDate,
-            mangaDto.endDate,
-        )
+        // verificar que el autor exista con repo inyectado
+        
 
-        const savedManga = await this.mangaRepository.insertOne(manga);
+        // const manga = new Manga(
+        //     mangaDto.title,
+        //     mangaDto.description,
+        //     mangaDto.author,//
+        //     mangaDto.startDate,
+        //     mangaDto.endDate,
+        //     mangaDto.totalVolumes,
+        //     mangaDto.totalRating,
+        // )
 
-        return {
-            id: savedManga.id
-        };
+        // const savedManga = await this.mangaRepository.insertOne(manga);
+
+        // return {
+        //     id: savedManga.id
+        // };
+
+        return {id : -1}; 
     }
 }
