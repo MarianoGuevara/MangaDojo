@@ -1,21 +1,19 @@
 // RowDataPacket: el obj q mysql te devuelve cuando haces un select
 // ResultSetHeader: el obj q mysql te devuelve cuando haces un insert, update o delete
 import { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
-import { IMangaRepository } from "../../Application/Manga/IMangaRepository";
-import { MangaModel } from "../../InterfaceAdapter/Models/MangaModel";
-import { MangaWithAuthorModel } from "../../InterfaceAdapter/Models/MangaWithAuthorModel";
-import { Manga } from "../../Entities/Manga";
-import { IMapper } from "../../Application/Interfaces/IMapper";
-import { IMapperDouble } from "../../Application/Interfaces/IMapperDouble";
+import { IMangaRepository } from "../../../Application/Manga/IMangaRepository";
+import { MangaReadRow } from "./Dtos/MySqlMangaReadRow";
+import { MangaInsert } from "./Dtos/MySqlMangaInsert";
+import { Manga } from "../../../Entities/Manga";
+import { MangaMapper } from "./MangaMapper";
+
 export class MangaRepository implements IMangaRepository {
 	private pool: Pool;
-	private mapperWithAutor: IMapperDouble<Manga, MangaWithAuthorModel>;
-	private mapper: IMapper<Manga, MangaModel>;
+	private mangaMapper: MangaMapper;
 
-	constructor(pool: Pool, mapperManga: IMapper<Manga, MangaModel>, mapperMangaWithAuthor: IMapperDouble<Manga, MangaWithAuthorModel>) {
+	constructor(pool: Pool, mangaMapper: MangaMapper) {
 		this.pool = pool;
-		this.mapper = mapperManga
-		this.mapperWithAutor = mapperMangaWithAuthor;
+		this.mangaMapper = mangaMapper;
 	}
 
 	async getAll(): Promise<Manga[]> {
@@ -39,17 +37,13 @@ export class MangaRepository implements IMangaRepository {
 		const [rows] = await this.pool.query<RowDataPacket[]>(sql);
 		
 		 return rows.map((row) => {
-        	const mangaWithAuthorModel = row as MangaWithAuthorModel; // si hay que hacer casteo explicito, aca
-        	return this.mapperWithAutor.mapToEntity(mangaWithAuthorModel);
+        	const mangaRow = row as MangaReadRow; // casteo implicito de mysqlrow a mi firma. Si hay que hacer casteo explicito, aca
+        	return this.mangaMapper.toMangaFromMangaReadRow(mangaRow);
     	});
 	}
 
-	async getById(id: number): Promise<Manga> {
-    	throw new Error("Method not implemented.");
-  	}
-
 	async insertOne(manga: Manga): Promise<Manga> {
-		const mangaModel = this.mapper.map(manga);
+		const mangaModel: MangaInsert = this.mangaMapper.toMangaInsertFromManga(manga);
 
 		const sql = `
 		INSERT INTO mangas (title, description, start_date, end_date, total_volumes, total_rating, manga_id_authos)
@@ -68,15 +62,12 @@ export class MangaRepository implements IMangaRepository {
 		
 		const [result] = await this.pool.query<ResultSetHeader>(sql, values);
 
-        return new Manga(
-        manga.title,
-        manga.description,
-        manga.author, 
-        manga.startDate,
-        manga.endDate,
-        manga.totalVolumes,
-        manga.totalRating,
-		result.insertId
-    );
+       
+		manga.id = result.insertId
+		return manga;
+  	}
+	
+	async getById(id: number): Promise<Manga> {
+    	throw new Error("Method not implemented.");
   	}
 }

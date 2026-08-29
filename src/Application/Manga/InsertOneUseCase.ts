@@ -1,6 +1,5 @@
 import { IMangaRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
-import { IMapper } from "../Interfaces/IMapper";
 import { Author } from "../../Entities/Author";
 
 export interface InsertOneMangaRequestDto {
@@ -34,7 +33,7 @@ export class InsertOneMangaUseCase {
         // const manga = new Manga(
         //     mangaDto.title,
         //     mangaDto.description,
-        //     mangaDto.author,//
+        //     mangaDto.author,// llamar de repo autor
         //     mangaDto.startDate,
         //     mangaDto.endDate,
         //     mangaDto.totalVolumes,

@@ -1,4 +1,4 @@
-export class MangaModel {
+export class MangaInsert {
     id: number;
     title: string;
     description: string;

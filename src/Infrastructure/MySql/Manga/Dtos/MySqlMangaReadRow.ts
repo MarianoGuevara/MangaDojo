@@ -1,4 +1,4 @@
-export class MangaWithAuthorModel {
+export class MangaReadRow {
     id: number;
     title: string;
     description: string;
