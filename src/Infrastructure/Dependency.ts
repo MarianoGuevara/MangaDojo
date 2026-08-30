@@ -6,6 +6,10 @@ import { UploadOneManga } from "../Application/Manga/UploadOneManga";
 
 import {pool} from "./MySql/MySqlPool";
 import { MangaMapper } from "./MySql/Manga/MangaMapper";
+import { AuthorController } from "../InterfaceAdapter/AuthorController";
+import { AuthorRepository } from "./MySql/Author/AuthorRepository";
+import { AuthorMapper } from "./MySql/Author/AuthorMapper";
+import { UploadOneAuthor } from "../Application/Author/UploadOneAuthor";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -15,12 +19,17 @@ container.register({
     pool: asValue(pool),
 
     mangaController: asClass(MangaController).singleton(),
+    authorController: asClass(AuthorController).singleton(),
+
     mangaRepository: asClass(MangaRepository).singleton(),
+    authorRepository: asClass(AuthorRepository).singleton(),
 
     mangaMapper: asClass(MangaMapper).singleton(),
+    authorMapper: asClass(AuthorMapper).singleton(),
 
     getAllMangasUseCase: asClass(ListAllMangas).singleton(),
-	insertOneMangaUseCase: asClass(UploadOneManga).singleton(),
+	  insertOneMangaUseCase: asClass(UploadOneManga).singleton(),
+    uploadOneMangaUseCase: asClass(UploadOneAuthor).singleton(),
 });
 
 export { container };

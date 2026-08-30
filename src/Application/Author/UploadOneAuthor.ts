@@ -1,5 +1,3 @@
-
-import { Manga } from "../../Entities/Manga";
 import { Author } from "../../Entities/Author";
 import { IAuthorRepository } from "./IAuthorRepository";
 import { NotFoundException } from "../../Entities/Exceptions/NotFoundException";
@@ -14,7 +12,7 @@ export interface UploadOneAuthorResponseDTO {
     id: number;
 }
 
-export class UploadOneUseCase {
+export class UploadOneAuthor {
     private authorRepository: IAuthorRepository;
 
     constructor(authorRepository: IAuthorRepository) {
