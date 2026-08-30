@@ -2,7 +2,7 @@ import { IMangaRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
 import { Author } from "../../Entities/Author";
 
-export interface InsertOneMangaRequestDto {
+export interface UploadOneMangaInputDTO {
     title: string;
     description: string;
     authorId : number;
@@ -12,11 +12,11 @@ export interface InsertOneMangaRequestDto {
     totalRating: number;
 }
 
-export interface InsertOneMangaResponseDto {
+export interface UploadOneMangaOutputDTO {
     id: number;
 }
 
-export class InsertOneMangaUseCase {
+export class UploadOneManga {
     private mangaRepository: IMangaRepository;
     // private authorRepository: AuthorRepository;
 
@@ -25,7 +25,7 @@ export class InsertOneMangaUseCase {
         
     }
 
-    async execute(mangaDto: InsertOneMangaRequestDto): Promise<InsertOneMangaResponseDto> {
+    async execute(mangaDto: UploadOneMangaInputDTO): Promise<UploadOneMangaOutputDTO> {
 
         // verificar que el autor exista con repo inyectado
         

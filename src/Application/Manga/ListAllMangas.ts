@@ -1,6 +1,6 @@
 import { IMangaRepository } from "./IMangaRepository";
 
-export interface GetAllMangaResponseDto {
+export interface ListAllMagasOutputDTO {
     title: string;
     description: string;
     author: string;
@@ -10,14 +10,16 @@ export interface GetAllMangaResponseDto {
     totalRating: number; 
 }
 
-export class GetAllMangaUseCase {
+export class ListAllMangas {
     private mangaRepository: IMangaRepository;
     
     constructor(mangaRepository: IMangaRepository) {
         this.mangaRepository = mangaRepository;
     }
    
-    async execute(): Promise<GetAllMangaResponseDto[]> {
+    async execute(): Promise<ListAllMagasOutputDTO[]> {
+        // validar token de usuario
+
         const mangas = await this.mangaRepository.getAll();
 
         const responseDtos = mangas.map(manga => ({
@@ -28,7 +30,7 @@ export class GetAllMangaUseCase {
             endDate: manga.endDate,
             totalVolumes: manga.totalVolumes,
             totalRating: manga.totalRating,
-        }) as GetAllMangaResponseDto);
+        }) as ListAllMagasOutputDTO);
 
         return responseDtos;
     }

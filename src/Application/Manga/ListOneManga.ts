@@ -2,7 +2,7 @@ import { IMangaRepository } from "./IMangaRepository";
 import { Manga } from "../../Entities/Manga";
 import { ValidationException } from "../../Entities/Exceptions/ValidationException";
 
-export class GetByIdMangaUseCase {
+export class ListOneManga {
     private mangaRepository: IMangaRepository;
     
     constructor(mangaRepository: IMangaRepository) {

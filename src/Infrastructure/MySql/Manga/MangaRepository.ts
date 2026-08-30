@@ -6,6 +6,7 @@ import { MangaReadRow } from "./Dtos/MySqlMangaReadRow";
 import { MangaInsert } from "./Dtos/MySqlMangaInsert";
 import { Manga } from "../../../Entities/Manga";
 import { MangaMapper } from "./MangaMapper";
+import { RepositoryException } from "../../../Entities/Exceptions/RepositoryException";
 
 export class MangaRepository implements IMangaRepository {
 	private pool: Pool;
@@ -17,29 +18,31 @@ export class MangaRepository implements IMangaRepository {
 	}
 
 	async getAll(): Promise<Manga[]> {
-		const sql = `
-		SELECT 
-			m.id, 
-			m.title, 
-			m.description, 
-			m.start_date, 
-			m.end_date,
-			m.total_volumes,
-			m.total_rating,
-			a.id as author_id, 
-			a.name as author_name, 
-			a.surname as author_surname,
-			a.nickname as author_nickname
-		FROM mangas m
-		JOIN authors a ON m.mangas_id_author = a.id;
-		`;
+		try{
+			const sql = `
+			SELECT 
+				m.id, 
+				m.title, 
+				m.description, 
+				m.start_date, 
+				m.end_date,
+				m.total_volumes,
+				m.total_rating,
+				a.id as author_id, 
+				a.name as author_name, 
+				a.surname as author_surname,
+				a.nickname as author_nickname
+			FROM mangas m
+			JOIN authors a ON m.mangas_id_author = a.id;
+			`;
 
-		const [rows] = await this.pool.query<RowDataPacket[]>(sql);
-		
-		 return rows.map((row) => {
-        	const mangaRow = row as MangaReadRow; // casteo implicito de mysqlrow a mi firma. Si hay que hacer casteo explicito, aca
-        	return this.mangaMapper.toMangaFromMangaReadRow(mangaRow);
-    	});
+			const [rows] = await this.pool.query<RowDataPacket[]>(sql);
+			
+			return rows.map((row) => {
+				const mangaRow = row as MangaReadRow; // casteo implicito de mysqlrow a mi firma. Si hay que hacer casteo explicito, aca
+				return this.mangaMapper.toMangaFromMangaReadRow(mangaRow);
+			});
+		} catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
 	}
 
 	async insertOne(manga: Manga): Promise<Manga> {

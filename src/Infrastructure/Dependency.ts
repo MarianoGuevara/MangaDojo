@@ -1,8 +1,8 @@
 import { createContainer, asClass, asValue, InjectionMode } from "awilix";
 import { MangaRepository } from "./MySql/Manga/MangaRepository";
 import { MangaController } from "../InterfaceAdapter/MangaController";
-import { GetAllMangaUseCase } from "../Application/Manga/GetAllUseCase";
-import { InsertOneMangaUseCase } from "../Application/Manga/InsertOneUseCase";
+import { ListAllMangas } from "../Application/Manga/ListAllMangas";
+import { UploadOneManga } from "../Application/Manga/UploadOneManga";
 
 import {pool} from "./MySql/MySqlPool";
 import { MangaMapper } from "./MySql/Manga/MangaMapper";
@@ -18,9 +18,9 @@ container.register({
     mangaRepository: asClass(MangaRepository).singleton(),
 
     mangaMapper: asClass(MangaMapper).singleton(),
-    
-    getAllMangasUseCase: asClass(GetAllMangaUseCase).singleton(),
-	insertOneMangaUseCase: asClass(InsertOneMangaUseCase).singleton(),
+
+    getAllMangasUseCase: asClass(ListAllMangas).singleton(),
+	insertOneMangaUseCase: asClass(UploadOneManga).singleton(),
 });
 
 export { container };

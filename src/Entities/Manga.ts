@@ -2,6 +2,7 @@ import { Volume } from "./Volume";
 import { ValidationException } from "./Exceptions/ValidationException";
 import { DateException } from "./Exceptions/DateException";
 import { Author } from "./Author";
+import { Validator } from "./Shared/Validator";
 
 export class Manga {
     // poner de atributo SOLO si hay alguna regla de negocio
@@ -57,80 +58,46 @@ export class Manga {
     }
 
     private validateTitle(title: string): string { 
-        this.validateType("string", title);
-        this.validateStringMin(title, "title", 5);
-        this.validateStringMax(title, "title", 75);
+        Validator.validateType("string", title);
+        Validator.stringMin(title, "title", 5);
+        Validator.stringMax(title, "title", 75);
         return title;
     }
 
     private validateDescription(description: string): string {
-        this.validateType("string", description);
-        this.validateStringMin(description, "description", 15);
-        this.validateStringMax(description, "description", 250);
+        Validator.validateType("string", description);
+        Validator.stringMin(description, "description", 15);
+        Validator.stringMax(description, "description", 250);
         return description;
     }
 
     private validateAuthor(author: Author): Author {
-        this.validateType("author", author);
+        this.validateSpecificType("author", author);
         return author;
     }
 
     private validateStartDate(startDate: Date): Date {
-        this.validateType("date", startDate);
+        Validator.validateType("date", startDate);
         return startDate;
     }
     private validateEndDate(endDate: Date | null): Date | null {
         if (endDate === null) {
             return null;
         }
-        this.validateType("date", endDate);
+        Validator.validateType("date", endDate);
         if (endDate < this._startDate) {
             throw new DateException("End date cannot be before start date");
         }
         return endDate;
     }
-    // genericas 
-
-    private validateType(correctType: string, field: any): void {
-        switch (correctType) {
-            case "string":
-                if (typeof field !== "string") {
-                    throw new ValidationException(`${field} must be a string`);
-                }
-                break;
-            case "number":
-                if (typeof field !== "number") {
-                    throw new ValidationException(`${field} must be a number`);
-                }
-                break;
-            case "date":
-                if (!(field instanceof Date)) {
-                    throw new ValidationException(`${field} must be a date`);
-                }
-                break;
+    
+    validateSpecificType(correctType: string, field: any): void {
+         switch (correctType) {
             case "author":
                 if (!(field instanceof Author)) {
-                    throw new ValidationException(`${field} must be an Author object`);
+                    throw new ValidationException(`${field} must be an Author`);
                 }
                 break;
-            default:
-                throw new ValidationException(`Unknown type: ${correctType}`);   
         }
-    }
-
-    private validateStringMin(data: string, fieldName: string, minLength: number): string {
-        if (data.length < minLength) {
-            throw new ValidationException(`${fieldName} must be at least ${minLength} characters long`);
-        }
-        return data;
-    }
-
-    private validateStringMax(data: string, fieldName: string, maxLength: number): string {
-        if (data.length > maxLength) {
-            throw new ValidationException(`${fieldName} must be at most ${maxLength} characters long`);
-        }
-        return data;
     }
 }   
-
-// console.log(new Manga("Test", "Test", "Test", new Date(), null));
