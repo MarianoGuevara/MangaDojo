@@ -25,7 +25,12 @@ export class MangaController{
     }
 
     async insertOne(req: IHttpRequest): Promise<IHttpResponse> {
+        // al hacer la conversión implicita, taanto los campos de req.body como los de la interfaz deben ser IDENTICOS
         const mangaDto = req.body as UploadOneMangaInputDTO;
+        mangaDto.startDate = new Date(mangaDto.startDate);
+        if (mangaDto.endDate != null) {
+            mangaDto.endDate = new Date(mangaDto.endDate);
+        }
 
         const insertedManga = await this.insertOneMangaUseCase.execute(mangaDto);
 

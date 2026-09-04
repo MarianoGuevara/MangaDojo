@@ -1,4 +1,4 @@
-export class MangaInsert {
+export class MySqlMangaInsert {
     id: number;
     title: string;
     description: string;

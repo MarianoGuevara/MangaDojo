@@ -1,6 +1,9 @@
 import { IMangaRepository } from "./IMangaRepository";
+import { IAuthorRepository } from "../Author/IAuthorRepository";
 import { Manga } from "../../Entities/Manga";
 import { Author } from "../../Entities/Author";
+import { NotFoundException } from "../../Entities/Exceptions/NotFoundException";
+import { DuplicateException } from "../../Entities/Exceptions/DuplicateException";
 
 export interface UploadOneMangaInputDTO {
     title: string;
@@ -18,34 +21,36 @@ export interface UploadOneMangaOutputDTO {
 
 export class UploadOneManga {
     private mangaRepository: IMangaRepository;
-    // private authorRepository: AuthorRepository;
+    private authorRepository: IAuthorRepository;
 
-    constructor(mangaRepository: IMangaRepository) {
+    constructor(mangaRepository: IMangaRepository, authorRepository: IAuthorRepository) {
         this.mangaRepository = mangaRepository;
-        
+        this.authorRepository = authorRepository;
     }
 
     async execute(mangaDto: UploadOneMangaInputDTO): Promise<UploadOneMangaOutputDTO> {
-
-        // verificar que el autor exista con repo inyectado
+        console.log(mangaDto);
+        console.log(mangaDto.authorId);
+        const manga = await this.mangaRepository.getByName(mangaDto.title);
+        if (manga != null) { throw new DuplicateException("The manga already exists"); }
         
+        const author = await this.authorRepository.getById(mangaDto.authorId);
+        if (author == null) { throw new NotFoundException("The author does not exist"); }
 
-        // const manga = new Manga(
-        //     mangaDto.title,
-        //     mangaDto.description,
-        //     mangaDto.author,// llamar de repo autor
-        //     mangaDto.startDate,
-        //     mangaDto.endDate,
-        //     mangaDto.totalVolumes,
-        //     mangaDto.totalRating,
-        // )
+        const mangaNew = new Manga(
+            mangaDto.title,
+            mangaDto.description,
+            author,
+            mangaDto.startDate,
+            mangaDto.endDate,
+            mangaDto.totalVolumes,
+            mangaDto.totalRating,
+        )
+        
+        const savedManga = await this.mangaRepository.insertOne(mangaNew);
 
-        // const savedManga = await this.mangaRepository.insertOne(manga);
-
-        // return {
-        //     id: savedManga.id
-        // };
-
-        return {id : -1}; 
+        return {
+            id: savedManga.id
+        };
     }
 }

@@ -19,9 +19,10 @@ export class AuthorController implements IController {
     }
 
     async uploadOneAuthor(req: IHttpRequest): Promise<IHttpResponse> {
-        const authorInsertDto = req.body as UploadOneAuthorInputDTO;
+        const authorInsertDto = req.body as UploadOneAuthorInputDTO; 
 
-        const res = this.uploadOneAuthorUseCase.execute(authorInsertDto);
+        const res = await this.uploadOneAuthorUseCase.execute(authorInsertDto);
+        console.log(res);
         return  {
             statusCode: 200,
             body: res

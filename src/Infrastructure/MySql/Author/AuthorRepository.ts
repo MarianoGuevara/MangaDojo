@@ -34,6 +34,23 @@ export class AuthorRepository implements IAuthorRepository {
         } catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
     }
 
+    async getById(id: number): Promise<Author | null> {
+         const sql = `
+            SELECT * from authors
+            WHERE id = ?;
+            `;
+            const values = [id];
+
+            const [rows] = await this.pool.query<RowDataPacket[]>(sql, values);
+            console.log("rows: ", rows);
+            if (rows.length === 0) {
+                return null;
+            } else {
+                const authorMySql = rows[0] as MySqlAuthor;
+                return this.authorMapper.toEntityFromAuthor(authorMySql);
+            }
+    }
+
     getAll(): Promise<Author[]> {
         throw new Error("Not implemented yet");
     }

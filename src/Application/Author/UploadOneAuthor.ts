@@ -1,6 +1,6 @@
 import { Author } from "../../Entities/Author";
 import { IAuthorRepository } from "./IAuthorRepository";
-import { NotFoundException } from "../../Entities/Exceptions/NotFoundException";
+import { DuplicateException } from "../../Entities/Exceptions/DuplicateException";
 
 export interface UploadOneAuthorInputDTO {
     name: string;
@@ -26,9 +26,9 @@ export class UploadOneAuthor {
             authorDto.nickname
         )
 
-        const repositoryAuthor = this.authorRepository.getByNameAndSurname(author.name, author.surname);
+        const repositoryAuthor = await this.authorRepository.getByNameAndSurname(author.name, author.surname);
         
-        if (repositoryAuthor != null) {
+        if (repositoryAuthor == null) {
             
             const savedAuthor = await this.authorRepository.insertOne(author);
             
@@ -36,6 +36,6 @@ export class UploadOneAuthor {
                 id: savedAuthor.id
             };
 
-        } else { throw new NotFoundException("The author already exists"); }
+        } else { throw new DuplicateException("The author already exists"); }
     }
 }

@@ -29,7 +29,7 @@ container.register({
 
     getAllMangasUseCase: asClass(ListAllMangas).singleton(),
 	  insertOneMangaUseCase: asClass(UploadOneManga).singleton(),
-    uploadOneMangaUseCase: asClass(UploadOneAuthor).singleton(),
+    uploadOneAuthorUseCase: asClass(UploadOneAuthor).singleton(),
 });
 
 export { container };

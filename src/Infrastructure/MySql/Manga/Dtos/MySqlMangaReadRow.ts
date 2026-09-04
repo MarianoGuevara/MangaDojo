@@ -1,4 +1,4 @@
-export class MangaReadRow {
+export class MySqlMangaReadRow {
     id: number;
     title: string;
     description: string;
