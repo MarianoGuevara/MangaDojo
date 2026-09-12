@@ -49,7 +49,6 @@ export class Manga {
         this._title = this.validateTitle(title);
         this._description = this.validateDescription(description);
         this._author = this.validateAuthor(author);
-
         this._startDate = this.validateStartDate(startDate);
         this._endDate = this.validateEndDate(endDate);
 
@@ -80,6 +79,7 @@ export class Manga {
         Validator.validateType("date", startDate);
         return startDate;
     }
+    
     private validateEndDate(endDate: Date | null): Date | null {
         if (endDate === null) {
             return null;

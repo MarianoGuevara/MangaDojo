@@ -29,9 +29,7 @@ export class UploadOneManga {
     }
 
     async execute(mangaDto: UploadOneMangaInputDTO): Promise<UploadOneMangaOutputDTO> {
-        console.log(mangaDto);
-        console.log(mangaDto.authorId);
-        const manga = await this.mangaRepository.getByName(mangaDto.title);
+        const manga = await this.mangaRepository.getByTitle(mangaDto.title);
         if (manga != null) { throw new DuplicateException("The manga already exists"); }
         
         const author = await this.authorRepository.getById(mangaDto.authorId);

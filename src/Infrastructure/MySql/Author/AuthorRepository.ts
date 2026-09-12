@@ -14,6 +14,10 @@ export class AuthorRepository implements IAuthorRepository {
         this.authorMapper = authorMapper;
     }
 
+    getAll(): Promise<Author[]> {
+        throw new Error("Not implemented yet");
+    }
+
     async getByNameAndSurname(name: string, surname: string): Promise<Author | null>  {
         try{
             const sql = `
@@ -35,7 +39,8 @@ export class AuthorRepository implements IAuthorRepository {
     }
 
     async getById(id: number): Promise<Author | null> {
-         const sql = `
+        try {
+            const sql = `
             SELECT * from authors
             WHERE id = ?;
             `;
@@ -49,22 +54,22 @@ export class AuthorRepository implements IAuthorRepository {
                 const authorMySql = rows[0] as MySqlAuthor;
                 return this.authorMapper.toEntityFromAuthor(authorMySql);
             }
-    }
 
-    getAll(): Promise<Author[]> {
-        throw new Error("Not implemented yet");
+        } catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
     }
 
     async insertOne(author: Author): Promise<Author> {
-        const sql = `
-        INSERT INTO authors 
-        VALUES (?, ?, ?, ?);
-        `;
-        const values = [author.id, author.name, author.surname, author.nickname];
+        try {
+            const sql = `
+            INSERT INTO authors 
+            VALUES (?, ?, ?, ?);
+            `;
+            const values = [author.id, author.name, author.surname, author.nickname];
 
-        const [result] = await this.pool.query<ResultSetHeader>(sql, values);
+            const [result] = await this.pool.query<ResultSetHeader>(sql, values);
 
-        author.id = result.insertId;
-        return author;
+            author.id = result.insertId;
+            return author;
+        } catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
     }
 }

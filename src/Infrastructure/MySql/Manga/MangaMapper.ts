@@ -1,10 +1,10 @@
 import { Manga } from "../../../Entities/Manga";
 import { Author } from "../../../Entities/Author";
-import { MySqlMangaReadRow } from "./Dtos/MySqlMangaReadRow";
-import { MySqlMangaInsert } from "./Dtos/MySqlMangaInsert";
+import { MySqlMangaWithAuthor } from "./Dtos/MySqlMangaWithAuthor";
+import { MySqlManga } from "./Dtos/MySqlManga";
 
 export class MangaMapper{
-    toMangaFromMangaReadRow(manga: MySqlMangaReadRow): Manga {
+    toEntityFromMangaWithAuthor(manga: MySqlMangaWithAuthor): Manga {
         const author = new Author(
             manga.author_name, 
             manga.author_surname, 
@@ -24,8 +24,8 @@ export class MangaMapper{
         );
     }
 
-    toMangaInsertFromManga(manga: Manga): MySqlMangaInsert {
-        return new MySqlMangaInsert(
+    toMangaFromEntity(manga: Manga): MySqlManga {
+        return new MySqlManga(
             manga.id,
             manga.title,
             manga.description,
