@@ -64,11 +64,11 @@ export class AuthorRepository implements IAuthorRepository {
             INSERT INTO authors 
             VALUES (?, ?, ?, ?);
             `;
-            const values = [author.id, author.name, author.surname, author.nickname];
+            const values = [author.Id, author.Name, author.Surname, author.Nickname];
 
             const [result] = await this.pool.query<ResultSetHeader>(sql, values);
 
-            author.id = result.insertId;
+            author.Id = result.insertId;
             return author;
         } catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
     }

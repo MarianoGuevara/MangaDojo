@@ -2,20 +2,28 @@ import { ValidationException } from "../Exceptions/ValidationException";
 
 export class Validator {
     static stringMin(data: string, fieldName: string, minLength: number): string {
-        if (data.trim().length < minLength) {
+        if (data.length < minLength) {
             throw new ValidationException(`${fieldName} must be at least ${minLength} characters long`);
         }
         return data;
     }
 
     static stringMax(data: string, fieldName: string, maxLength: number): string {
-        if (data.trim().length > maxLength) {
+        console.log("data.length: ", data.length);
+        if (data.length > maxLength) {
             throw new ValidationException(`${fieldName} must be at most ${maxLength} characters long`);
         }
         return data;
     }
 
     static validateType(correctType: string, field: any): void {
+        /**
+         *  contempled types:
+         *  - string
+         *  - number
+         *  - date
+         */
+        
         switch (correctType) {
             case "string":
                 if (typeof field !== "string") {

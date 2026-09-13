@@ -23,13 +23,13 @@ export class ListAllMangas {
         const mangas = await this.mangaRepository.getAll();
 
         const responseDtos = mangas.map(manga => ({
-            title: manga.title,
-            description: manga.description,
-            author: manga.author.name + " " + manga.author.surname,
-            startDate: manga.startDate,
-            endDate: manga.endDate,
-            totalVolumes: manga.totalVolumes,
-            totalRating: manga.totalRating,
+            title: manga.Title,
+            description: manga.Description,
+            author: manga.Author.Name + " " + manga.Author.Surname,
+            startDate: manga.StartDate,
+            endDate: manga.EndDate,
+            totalVolumes: manga.TotalVolumes,
+            totalRating: manga.TotalRating,
         }) as ListAllMagasOutputDTO);
 
         return responseDtos;

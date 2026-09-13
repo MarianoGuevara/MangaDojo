@@ -99,7 +99,7 @@ export class MangaRepository implements IMangaRepository {
 			const [result] = await this.pool.query<ResultSetHeader>(sql, values);
 
 		
-			manga.id = result.insertId
+			manga.Id = result.insertId
 			return manga;
 		} catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
   	}

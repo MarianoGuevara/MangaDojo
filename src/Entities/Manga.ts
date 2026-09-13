@@ -6,54 +6,54 @@ import { Validator } from "./Shared/Validator";
 
 export class Manga {
     // poner de atributo SOLO si hay alguna regla de negocio
-    private _id: number;
-    private _title: string;
-    private _description: string;
-    private _author: Author;
-    private _startDate: Date;
-    private _endDate: Date | null;
-    private _totalVolumes: number;
-    private _totalRating: number;
+    private id: number;
+    private title: string;
+    private description: string;
+    private author: Author;
+    private startDate: Date;
+    private endDate: Date | null;
+    private totalVolumes: number;
+    private totalRating: number;
 
-    public get id(): number {
-        return this._id;
+    public get Id(): number {
+        return this.id;
     }
-    public set id(id: number) {
-        this._id = id;
+    public set Id(id: number) {
+        this.id = id;
     }
-    public get title(): string {
-        return this._title;
+    public get Title(): string {
+        return this.title;
     }
-    public get description(): string {
-        return this._description;
+    public get Description(): string {
+        return this.description;
     }
-    public get author(): Author {
-        return this._author;
+    public get Author(): Author {
+        return this.author;
     }
-    public get startDate(): Date {
-        return this._startDate;
+    public get StartDate(): Date {
+        return this.startDate;
     }
-    public get endDate(): Date | null {
-        return this._endDate;
+    public get EndDate(): Date | null {
+        return this.endDate;
     }
-    public get totalVolumes(): number {
-        return this._totalVolumes;
+    public get TotalVolumes(): number {
+        return this.totalVolumes;
     }
-    public get totalRating(): number {
-        return this._totalRating;
+    public get TotalRating(): number {
+        return this.totalRating;
     }
 
     constructor(title: string, description: string, author: Author, startDate: Date, endDate: Date | null, totalVolumes: number, totalRating: number, id?: number) {
-        this._id = id ?? 0;
+        this.id = id ?? 0;
 
-        this._title = this.validateTitle(title);
-        this._description = this.validateDescription(description);
-        this._author = this.validateAuthor(author);
-        this._startDate = this.validateStartDate(startDate);
-        this._endDate = this.validateEndDate(endDate);
+        this.title = this.validateTitle(title);
+        this.description = this.validateDescription(description);
+        this.author = this.validateAuthor(author);
+        this.startDate = this.validateStartDate(startDate);
+        this.endDate = this.validateEndDate(endDate);
 
-        this._totalVolumes = totalVolumes;
-        this._totalRating = totalRating;
+        this.totalVolumes = totalVolumes;
+        this.totalRating = totalRating;
     }
 
     private validateTitle(title: string): string { 
@@ -85,7 +85,7 @@ export class Manga {
             return null;
         }
         Validator.validateType("date", endDate);
-        if (endDate < this._startDate) {
+        if (endDate < this.startDate) {
             throw new DateException("End date cannot be before start date");
         }
         return endDate;

@@ -26,14 +26,17 @@ export class UploadOneAuthor {
             authorDto.nickname
         )
 
-        const repositoryAuthor = await this.authorRepository.getByNameAndSurname(author.name, author.surname);
+        const repositoryAuthor = await this.authorRepository.getByNameAndSurname(
+            author.Name, 
+            author.Surname
+        );
         
         if (repositoryAuthor == null) {
             
             const savedAuthor = await this.authorRepository.insertOne(author);
             
             return {
-                id: savedAuthor.id
+                id: savedAuthor.Id
             };
 
         } else { throw new DuplicateException("The author already exists"); }

@@ -4,6 +4,8 @@ import { DateException } from "../../Entities/Exceptions/DateException";
 import { RepositoryException } from "../../Entities/Exceptions/RepositoryException";
 import { NotFoundException } from "../../Entities/Exceptions/NotFoundException";
 import { DuplicateException } from "../../Entities/Exceptions/DuplicateException";
+import { InvalidCredentialsException } from "../../Entities/Exceptions/InvalidCredentialsException";
+import { AlreadyExistsException } from "../../Entities/Exceptions/AlreadyExistsException";
 
 export function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
     if (err instanceof ValidationException) {
@@ -20,8 +22,14 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
     else if (err instanceof DuplicateException) {
         res.status(400).json({ error: err.message });
     }
+    else if (err instanceof InvalidCredentialsException) {
+        res.status(400).json({ error: err.message });
+    }
+    else if (err instanceof AlreadyExistsException) {
+        res.status(400).json({ error: err.message });
+    }
     else {
-        res.status(500).json({ error: "Unexpected Error: " + err.code });
+        res.status(500).json({ error: "Unexpected Error: " + err.code + " - " + err.type + " - " + err.message });
     }
 }
 

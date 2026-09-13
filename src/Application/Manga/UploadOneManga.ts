@@ -48,7 +48,7 @@ export class UploadOneManga {
         const savedManga = await this.mangaRepository.insertOne(mangaNew);
 
         return {
-            id: savedManga.id
+            id: savedManga.Id
         };
     }
 }

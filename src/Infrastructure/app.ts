@@ -3,12 +3,15 @@ import { mangaRoutes } from './Express/MangaRoutes';
 import { container } from "./Dependency";
 import { MangaController } from '../InterfaceAdapter/MangaController';
 import { MangaRepository } from './MySql/Manga/MangaRepository';
-import { errorHandler } from './Express/middleware';
+import { errorHandler } from './Express/middlewareErrorHandler';
 import { MangaMapper } from './MySql/Manga/MangaMapper';
 import { AuthorRepository } from './MySql/Author/AuthorRepository';
 import { AuthorMapper } from './MySql/Author/AuthorMapper';
 import { AuthorController } from '../InterfaceAdapter/AuthorController';
-import { authorRoutes } from './Express/AuthorRouters';
+import { authorRoutes } from './Express/AuthorRoutes';
+import { UserController } from '../InterfaceAdapter/UserController';
+import { userRoutes } from './Express/UserRoutes';
+import { AuthMiddleware } from './Express/middlewareAuth';
 
 // App express
 const app = express();
@@ -18,21 +21,27 @@ app.use(express.json());
 // Dependencias
 const mangaController = container.resolve<MangaController>("mangaController");
 const authorController = container.resolve<AuthorController>("authorController");
+const userController = container.resolve<UserController>("userController");
+	
+const authMiddleware = container.resolve<AuthMiddleware>("authMiddleware");
 
 container.resolve<MangaRepository>("mangaRepository");
 container.resolve<MangaMapper>("mangaMapper");
 container.resolve<AuthorRepository>("authorRepository");
 container.resolve<AuthorMapper>("authorMapper");
+
 // Routes
 const mangaRoutesInstance = mangaRoutes(mangaController);
-const authorRoutesInstance = authorRoutes(authorController);
+const authorRoutesInstance = authorRoutes(authorController, authMiddleware);
+const userRoutesInstance = userRoutes(userController);
 
 app.use('/api/mangas', mangaRoutesInstance);
 app.use('/api/authors', authorRoutesInstance);
-
+app.use('/api/users', userRoutesInstance);
 
 // Middleware global de errores
 app.use(errorHandler);
+
 
 app.listen(PORT, () => {
   	console.log(`Servidor corriendo en el puerto ${PORT}`);

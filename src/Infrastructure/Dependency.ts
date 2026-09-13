@@ -10,6 +10,14 @@ import { AuthorController } from "../InterfaceAdapter/AuthorController";
 import { AuthorRepository } from "./MySql/Author/AuthorRepository";
 import { AuthorMapper } from "./MySql/Author/AuthorMapper";
 import { UploadOneAuthor } from "../Application/Author/UploadOneAuthor";
+import { UserController } from "../InterfaceAdapter/UserController";
+import { LoginUserUseCase } from "../Application/User/LoginUser";
+import { RegisterUserUseCase } from "../Application/User/RegisterUser";
+import { UserRepository } from "./MySql/User/UserRepository";
+import { BcryptPasswordHasher } from "./Bcryptjs/BcryptPasswordHasher";
+import { JwtTokenProvider } from "./JsonWebToken/JsonWebToken";
+import { UserMapper } from "./MySql/User/UserMapper";
+import { AuthMiddleware } from "./Express/middlewareAuth";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -17,19 +25,31 @@ const container = createContainer({
 
 container.register({
     pool: asValue(pool),
+    jwtSecret: asValue(process.env.JWT_SECRET),
 
     mangaController: asClass(MangaController).singleton(),
     authorController: asClass(AuthorController).singleton(),
-
+    userController: asClass(UserController).singleton(),
+    
     mangaRepository: asClass(MangaRepository).singleton(),
     authorRepository: asClass(AuthorRepository).singleton(),
-
+    userRepository: asClass(UserRepository).singleton(),
+    
     mangaMapper: asClass(MangaMapper).singleton(),
     authorMapper: asClass(AuthorMapper).singleton(),
+    userMapper: asClass(UserMapper).singleton(),
 
     getAllMangasUseCase: asClass(ListAllMangas).singleton(),
 	  insertOneMangaUseCase: asClass(UploadOneManga).singleton(),
     uploadOneAuthorUseCase: asClass(UploadOneAuthor).singleton(),
+
+    registerUserUseCase: asClass(RegisterUserUseCase).singleton(),
+    loginUserUseCase: asClass(LoginUserUseCase).singleton(),
+    
+    passwordHasher: asClass(BcryptPasswordHasher).singleton(),
+    tokenProvider: asClass(JwtTokenProvider).singleton(),
+
+    authMiddleware: asClass(AuthMiddleware).singleton()
 });
 
 export { container };
@@ -37,6 +57,7 @@ export { container };
 /*
 pasos: 
 -configuracion de libreria awilix y container de libreria
--dentro del container, matchear las interfaces con clases reales
+-dentro del container, matchear los parametros inyecciones de tipo clase o interfaz
+ que use en las clases, con las clases concretas que quiero inyectar.
 -exportarlo para en cualquier lugar poder container.resolve<MangaController>("mangaController");
 */

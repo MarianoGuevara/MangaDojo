@@ -1,3 +1,6 @@
+import { InvalidCredentialsException } from "../../Entities/Exceptions/InvalidCredentialsException";
+import { IHasher } from "../Shared/IHasher";
+import { IJsonWebToken } from "./IJsonWebToken";
 import { IUserRepository } from "./IUserRepository";
 
 export interface LoginUserInput {
@@ -8,18 +11,25 @@ export interface LoginUserInput {
 export interface LoginUserOutput {
     token: string;
     user: {
-        id: number;
         email: string;
         name: string;
     };
 }
 
 export class LoginUserUseCase {
+    private userRepository: IUserRepository;
+    private passwordHasher: IHasher;
+    private tokenProvider: IJsonWebToken;
+    
     constructor(
-        private readonly userRepository: IUserRepository,
-        // private readonly passwordHasher: PasswordHasher,
-        // private readonly tokenProvider: TokenProvider
-    ) {}
+        userRepository: IUserRepository,
+        passwordHasher: IHasher,
+        tokenProvider: IJsonWebToken
+    ) {
+        this.userRepository = userRepository;
+        this.passwordHasher = passwordHasher;
+        this.tokenProvider = tokenProvider;
+    }
 
     async execute(input: LoginUserInput): Promise<LoginUserOutput> {
         // 1. Buscar si el usuario existe por email
@@ -28,34 +38,31 @@ export class LoginUserUseCase {
         // 4. Retornar la respuesta esperada
         
         const user = await this.userRepository.findByEmail(input.email);
-        // if (!user) {
-        //     throw new InvalidCredentialsException();
-        // }
-
         
-        // const isPasswordValid = await this.passwordHasher.compare(
-        //     input.password,
-        //     user.passwordHash
-        // );
-
-        // if (!isPasswordValid) {
-        //     throw new InvalidCredentialsException();
-        // }
-
-       
-        // const token = this.tokenProvider.generateToken({
-        //     userId: user.id,
-        //     email: user.email
-        // });
-
+        if (user == undefined) {
+            throw new InvalidCredentialsException("Mail does not exist");
+        }
         
-        // return {
-        //     token,
-        //     user: {
-        //         id: user.id,
-        //         email: user.email,
-        //         name: user.name
-        //     }
-        // };
+        const isPasswordValid = await this.passwordHasher.compare(
+            input.password,
+            user.Password
+        );
+
+        if (isPasswordValid == false) {
+            throw new InvalidCredentialsException("Password is incorrect");
+        }
+
+        const token = this.tokenProvider.generateToken({
+            userId: user.Id,
+            email: user.Email
+        });
+        
+        return {
+            token,
+            user: {
+                email: user.Email,
+                name: user.Name
+            }
+        };
     }
 }

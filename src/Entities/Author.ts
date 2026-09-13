@@ -1,37 +1,37 @@
 import { Validator } from "./Shared/Validator";
 
 export class Author {
-    private _id: number;
-    private _name: string;
-    private _surname: string;
-    private _nickname: string | null;
+    private id: number;
+    private name: string;
+    private surname: string;
+    private nickname: string | null;
 
-    public get name(): string {
-        return this._name;
+    public get Name(): string {
+        return this.name;
     }
 
-    public get surname(): string {
-        return this._surname;
+    public get Surname(): string {
+        return this.surname;
     }
 
-    public get nickname(): string | null {
-        return this._nickname;
+    public get Nickname(): string | null {
+        return this.nickname;
     }
 
-    public get id(): number {
-        return this._id;
+    public get Id(): number {
+        return this.id;
     }
 
-    public set id(id: number) {
-        this._id = id;
+    public set Id(id: number) {
+        this.id = id;
     }
 
     constructor(name: string, surname: string, nickname: string | null, id?: number) {
-        this._id = id ?? 0;
+        this.id = id ?? 0;
 
-        this._name = this.capitalize(this.validateName(name));
-        this._surname = this.capitalize(this.validateSurname(surname));
-        this._nickname = this.validateNickname(nickname);
+        this.name = this.capitalize(this.validateName(name));
+        this.surname = this.capitalize(this.validateSurname(surname));
+        this.nickname = this.validateNickname(nickname);
     }
 
     private validateName(name: string): string { 

@@ -46,3 +46,5 @@ Api rest hecha con typescript y SQL organizada con Clean Architecture
 * Awilix (inyección de dependencias)
 * Mysql2 (sql)
 * Dotenv (para seguridad)
+* bcryptjs (para cifrar contraseñas)
+* jsonwebtoken (Para crear y verificar tokens web JSON)

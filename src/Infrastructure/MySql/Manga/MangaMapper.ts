@@ -26,14 +26,14 @@ export class MangaMapper{
 
     toMangaFromEntity(manga: Manga): MySqlManga {
         return new MySqlManga(
-            manga.id,
-            manga.title,
-            manga.description,
-            manga.startDate,
-            manga.endDate,
-            manga.totalVolumes,
-            manga.totalRating,
-            manga.author.id
+            manga.Id,
+            manga.Title,
+            manga.Description,
+            manga.StartDate,
+            manga.EndDate,
+            manga.TotalVolumes,
+            manga.TotalRating,
+            manga.Author.Id
         )
     }
 }

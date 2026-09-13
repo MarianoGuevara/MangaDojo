@@ -1,15 +1,44 @@
+import { ValidationException } from "./Exceptions/ValidationException";
 import { Validator } from "./Shared/Validator";
 
 export class User {
-    id: number;
-    name: string;
-    surname: string;
-    nickname: string;
-    email: string;
-    password: string;
-    createdAt: Date;
-    role: Role;
-    
+    private id: number;
+    private name: string;
+    private surname: string;
+    private nickname: string;
+    private email: string;
+    private password: string;
+    private createdAt: Date;
+    private role: Role;
+
+    public get Id(): number {
+        return this.id;
+    }
+    public set Id(id: number) {
+        this.id = id;
+    }
+    public get Name(): string {
+        return this.name;
+    }
+    public get Surname(): string {
+        return this.surname;
+    }
+    public get Nickname(): string {
+        return this.nickname;
+    }
+    public get Email(): string {
+        return this.email;
+    }
+    public get Password(): string {
+        return this.password;
+    }
+    public get CreatedAt(): Date {
+        return this.createdAt;
+    }
+    public get Role(): Role {
+        return this.role;
+    }
+
     constructor(id: number, name: string, surname: string, nickname: string, email: string, password: string, createdAt: Date, role: Role) {
         this.id = id;
     
@@ -17,10 +46,10 @@ export class User {
         this.surname = this.validateSurname(surname);
         this.nickname = this.validateNickname(nickname);
         this.email = this.validateEmail(email);
-        this.password = this.validatePassword(password);
-        this.createdAt = this.validateCreatedAt(createdAt);
+        this.createdAt = this.validateLogicDate(createdAt);
+        this.role = this.validateRole(role);
 
-        this.role = role;
+        this.password = password; // ya le llega hasheada por eso no valida
     }
 
     private validateName(name: string): string {
@@ -53,17 +82,14 @@ export class User {
         return email;
     }
 
-    private validatePassword(password: string): string {
-        Validator.validateType("string", password);
-        Validator.stringMin(password, "password", 8);
-        Validator.stringMax(password, "password", 30);
-
-        // vaaliidar que tengaa nums o algo 
-        
-        return password;
-    }
-    private validateCreatedAt(createdAt: Date): Date {
+    private validateLogicDate(createdAt: Date): Date {
         // validar que sea una fecha valida; que sea menor a la fecha actual; que no sea una fecha futura
         return createdAt;
+    }
+    private validateRole(role: string): Role {
+        if (role !== "admin" && role !== "user") {
+            throw new ValidationException(`Invalid role type: ${role}`);
+        }
+        return role as Role;
     }
 }
