@@ -3,6 +3,7 @@ export type TokenPayload = {
     email: string;
 };
 
-export interface IJsonWebToken {
+export interface ITokenService {
     generateToken(payload: TokenPayload): string;
+    verify(token: string): Promise<TokenPayload>;
 }

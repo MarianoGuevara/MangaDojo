@@ -1,6 +1,6 @@
 import { InvalidCredentialsException } from "../../Entities/Exceptions/InvalidCredentialsException";
 import { IHasher } from "../Shared/IHasher";
-import { IJsonWebToken } from "./IJsonWebToken";
+import { ITokenService } from "./IJsonWebToken";
 import { IUserRepository } from "./IUserRepository";
 
 export interface LoginUserInput {
@@ -19,12 +19,12 @@ export interface LoginUserOutput {
 export class LoginUserUseCase {
     private userRepository: IUserRepository;
     private passwordHasher: IHasher;
-    private tokenProvider: IJsonWebToken;
+    private tokenProvider: ITokenService;
     
     constructor(
         userRepository: IUserRepository,
         passwordHasher: IHasher,
-        tokenProvider: IJsonWebToken
+        tokenProvider: ITokenService
     ) {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;

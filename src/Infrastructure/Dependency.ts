@@ -17,7 +17,6 @@ import { UserRepository } from "./MySql/User/UserRepository";
 import { BcryptPasswordHasher } from "./Bcryptjs/BcryptPasswordHasher";
 import { JwtTokenProvider } from "./JsonWebToken/JsonWebToken";
 import { UserMapper } from "./MySql/User/UserMapper";
-import { AuthMiddleware } from "./Express/middlewareAuth";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -25,7 +24,7 @@ const container = createContainer({
 
 container.register({
     pool: asValue(pool),
-    jwtSecret: asValue(process.env.JWT_SECRET),
+    secretKey: asValue(process.env.JWT_SECRET),
 
     mangaController: asClass(MangaController).singleton(),
     authorController: asClass(AuthorController).singleton(),
@@ -48,8 +47,6 @@ container.register({
     
     passwordHasher: asClass(BcryptPasswordHasher).singleton(),
     tokenProvider: asClass(JwtTokenProvider).singleton(),
-
-    authMiddleware: asClass(AuthMiddleware).singleton()
 });
 
 export { container };

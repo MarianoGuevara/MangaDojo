@@ -1,25 +1,28 @@
 import jwt from 'jsonwebtoken';
-import { IJsonWebToken } from '../../Application/User/IJsonWebToken';
-// import { TokenProvider } from '../../domain/services/TokenProvider';
+import { ITokenService } from '../../Application/User/IJsonWebToken';
+import { TokenPayload } from "../../Application/User/IJsonWebToken";
 
-export class JwtTokenProvider implements IJsonWebToken {
+export class JwtTokenProvider implements ITokenService {
                     // Es la "firma Digital" de mi servidor
-    constructor(private readonly jwtSecret: string) {}
+    constructor(private readonly secretKey: string) {}
 
-    generateToken(payload: { userId: number; email: string }): string {
+    generateToken(payload: TokenPayload): string {
         return jwt.sign(
             payload, 
-            this.jwtSecret, 
+            this.secretKey, 
             { expiresIn: '8h' }
         );
     }
 
-    // compareToken(token: string): { userId: number; email: string } | null {
-    //     try {
-    //         const decoded = jwt.verify(token, this.jwtSecret) as { userId: number; email: string };
-    //         return decoded;
-    //     } catch (error) {
-    //         return null;
-    //     }
-    // }
+    async verify(token: string): Promise<TokenPayload> {
+        return new Promise((resolve, reject) => {
+            jwt.verify(token, this.secretKey, (err, decoded) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(decoded as TokenPayload);
+                }
+            });
+        });
+    }
 }

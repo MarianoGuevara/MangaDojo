@@ -11,8 +11,6 @@ import { AuthorController } from '../InterfaceAdapter/AuthorController';
 import { authorRoutes } from './Express/AuthorRoutes';
 import { UserController } from '../InterfaceAdapter/UserController';
 import { userRoutes } from './Express/UserRoutes';
-import { AuthMiddleware } from './Express/middlewareAuth';
-
 // App express
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,8 +20,6 @@ app.use(express.json());
 const mangaController = container.resolve<MangaController>("mangaController");
 const authorController = container.resolve<AuthorController>("authorController");
 const userController = container.resolve<UserController>("userController");
-	
-const authMiddleware = container.resolve<AuthMiddleware>("authMiddleware");
 
 container.resolve<MangaRepository>("mangaRepository");
 container.resolve<MangaMapper>("mangaMapper");
@@ -32,7 +28,7 @@ container.resolve<AuthorMapper>("authorMapper");
 
 // Routes
 const mangaRoutesInstance = mangaRoutes(mangaController);
-const authorRoutesInstance = authorRoutes(authorController, authMiddleware);
+const authorRoutesInstance = authorRoutes(authorController, container.resolve("tokenProvider"));
 const userRoutesInstance = userRoutes(userController);
 
 app.use('/api/mangas', mangaRoutesInstance);
