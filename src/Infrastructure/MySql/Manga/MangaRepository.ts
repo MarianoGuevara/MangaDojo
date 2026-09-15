@@ -6,7 +6,7 @@ import { MySqlMangaWithAuthor } from "./Dtos/MySqlMangaWithAuthor";
 import { MySqlManga } from "./Dtos/MySqlManga";
 import { Manga } from "../../../Entities/Manga";
 import { MangaMapper } from "./MangaMapper";
-import { RepositoryException } from "../../../Entities/Exceptions/RepositoryException";
+import { RepositoryException } from "../../Exceptions/RepositoryException";
 
 export class MangaRepository implements IMangaRepository {
 	private pool: Pool;

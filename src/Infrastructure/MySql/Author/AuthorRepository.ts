@@ -3,7 +3,7 @@ import { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import { AuthorMapper } from "./AuthorMapper";
 import { Author } from "../../../Entities/Author";
 import { MySqlAuthor } from "./Dtos/MySqlAuthor";
-import { RepositoryException } from "../../../Entities/Exceptions/RepositoryException";
+import { RepositoryException } from "../../Exceptions/RepositoryException";
 
 export class AuthorRepository implements IAuthorRepository {
     private pool: Pool;

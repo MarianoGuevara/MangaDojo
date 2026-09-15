@@ -2,6 +2,7 @@ import { UploadOneAuthorInputDTO, UploadOneAuthor } from "../Application/Author/
 import { IController } from "./Interfaces/IController";
 import { IHttpRequest } from "./Interfaces/IHttpRequest";
 import { IHttpResponse } from "./Interfaces/IHttpResponse";
+import { ControllersValidator } from "./Shared/ControllersValidator";
 
 
 export class AuthorController implements IController {
@@ -19,7 +20,9 @@ export class AuthorController implements IController {
     }
 
     async uploadOneAuthor(req: IHttpRequest): Promise<IHttpResponse> {
-        const authorInsertDto = req.body as UploadOneAuthorInputDTO; 
+        ControllersValidator.validate(req.body, ['name', 'surname']);
+
+        const authorInsertDto = req.body as UploadOneAuthorInputDTO; // implicitamente castea el undefined a null.
 
         const res = await this.uploadOneAuthorUseCase.execute(authorInsertDto);
         console.log(res);

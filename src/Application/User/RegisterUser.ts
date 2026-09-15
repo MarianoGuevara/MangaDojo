@@ -3,6 +3,7 @@ import { IHasher } from "../Shared/IHasher";
 import { User } from "../../Entities/User";
 import { Validator } from "../../Entities/Shared/Validator";
 import { AlreadyExistsException } from "../../Entities/Exceptions/AlreadyExistsException";
+import { ValidationException } from "../../Entities/Exceptions/ValidationException";
 
 export interface RegisterUserInput {
     name: string;
@@ -31,12 +32,6 @@ export class RegisterUserUseCase {
     }
 
     async execute(input: RegisterUserInput): Promise<RegisterUserOutput> {
-        // 1. Validar que no exista un usuario registrado con ese email
-        // 2. Hashear la contraseña en texto plano
-        // 3. Crear la entidad de Dominio User (acá se ejecutan sus validaciones internas, ej. formato de email)
-        // 4. Persistir el usuario en el Repositorio
-        // 5. Retornar el DTO (cuando se registre el user debe iniciar sesion para token luego)
-
         const existingUser = await this.userRepository.findByEmail(input.email);
 
         if (existingUser != undefined) {
@@ -72,6 +67,11 @@ export class RegisterUserUseCase {
         Validator.stringMin(password, "password", 8);
         Validator.stringMax(password, "password", 30);
 
-        // validar que password plana tenga nums o algo copado
+        //  password que contenga al menos una letra mayúscula, una letra minúscula, 
+        // un número y un carácter especial
+        const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
+        if (!PASSWORD_REGEX.test(password)) {
+            throw new ValidationException("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
+        }
     }
 }

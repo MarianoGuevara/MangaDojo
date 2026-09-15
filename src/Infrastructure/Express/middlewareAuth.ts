@@ -1,7 +1,7 @@
 // infrastructure/http/middlewares/AuthMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import { ITokenService, TokenPayload } from '../../Application/User/IJsonWebToken';
-import { UnauthorizedException } from '../../Entities/Exceptions/UnauthorizedException';
+import { UnauthorizedException } from '../Exceptions/UnauthorizedException';
 
 export function authMiddleware(tokenProvider: ITokenService) {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -9,7 +9,7 @@ export function authMiddleware(tokenProvider: ITokenService) {
         console.log("Headers recibidos:", req.headers);
         console.log("Token recibido:", req.headers.authorization);
         
-        // en header.authorization va a viajar el token
+        // en request.header.authorization va a viajar el token
         const AuthField = req.headers.authorization;
 
         if (!AuthField) return next(new UnauthorizedException('Token requerido'));
@@ -19,7 +19,8 @@ export function authMiddleware(tokenProvider: ITokenService) {
         try {
             const payload = await tokenProvider.verify(token);
             
-            (req as { user?: TokenPayload }).user = payload;
+            // al request le agrego un campo user para que los controladores puedan acceder al user validado
+            (req as { user?: TokenPayload }).user = payload; 
             
             next();
         } catch (error) {

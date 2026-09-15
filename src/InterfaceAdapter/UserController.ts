@@ -4,6 +4,7 @@ import { IHttpRequest } from "./Interfaces/IHttpRequest";
 import { IHttpResponse } from "./Interfaces/IHttpResponse";
 import { RegisterUserInput } from "../Application/User/RegisterUser";
 import { LoginUserInput, LoginUserUseCase } from "../Application/User/LoginUser";
+import { ControllersValidator } from "./Shared/ControllersValidator";
 
 export class UserController implements IController {
     private registerUserUseCase: RegisterUserUseCase;
@@ -22,8 +23,10 @@ export class UserController implements IController {
     }
 
     async registerUser(req: IHttpRequest): Promise<IHttpResponse> {
+        ControllersValidator.validate(req.body, ["name", "surname", "nickname", "email", "password", "role"])
+        
         const userInsertDto = req.body as RegisterUserInput;
-        console.log(userInsertDto);
+       
         const res = await this.registerUserUseCase.execute(userInsertDto);
         
         return  {
@@ -33,6 +36,8 @@ export class UserController implements IController {
     }
 
     async loginUser(req: IHttpRequest): Promise<IHttpResponse> {
+        ControllersValidator.validate(req.body, ["email", "password"])
+
         const userLoginDto = req.body as LoginUserInput;
         
         const res = await this.loginUserUseCase.execute(userLoginDto);

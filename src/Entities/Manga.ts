@@ -77,6 +77,8 @@ export class Manga {
 
     private validateStartDate(startDate: Date): Date {
         Validator.validateType("date", startDate);
+
+        Validator.validateDateLogic(startDate, "manga start date");
         return startDate;
     }
     
@@ -84,7 +86,9 @@ export class Manga {
         if (endDate === null) {
             return null;
         }
+
         Validator.validateType("date", endDate);
+        
         if (endDate < this.startDate) {
             throw new DateException("End date cannot be before start date");
         }

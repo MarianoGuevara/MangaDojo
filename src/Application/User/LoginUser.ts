@@ -32,11 +32,6 @@ export class LoginUserUseCase {
     }
 
     async execute(input: LoginUserInput): Promise<LoginUserOutput> {
-        // 1. Buscar si el usuario existe por email
-        // 2. Verificar la contraseña ingresada contra el hash almacenado
-        // 3. Generar el token de autenticación
-        // 4. Retornar la respuesta esperada
-        
         const user = await this.userRepository.findByEmail(input.email);
         
         if (user == undefined) {

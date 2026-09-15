@@ -14,15 +14,12 @@ export class JwtTokenProvider implements ITokenService {
         );
     }
 
+    // verifica que el token sea valido, no haya expirado ni sido modificado. 
+    // si es valido devuelve el payload del token
     async verify(token: string): Promise<TokenPayload> {
-        return new Promise((resolve, reject) => {
-            jwt.verify(token, this.secretKey, (err, decoded) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(decoded as TokenPayload);
-                }
-            });
-        });
+        
+        // jwt.verify síncrono lanza una excepción directamente si falla
+        const decoded = jwt.verify(token, this.secretKey);
+        return decoded as TokenPayload;
     }
 }

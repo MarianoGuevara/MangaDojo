@@ -4,7 +4,7 @@ import { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import { User } from "../../../Entities/User";
 import { IUserRepository } from "../../../Application/User/IUserRepository";
 import { UserMapper } from "./UserMapper";
-import { RepositoryException } from "../../../Entities/Exceptions/RepositoryException";
+import { RepositoryException } from "../../Exceptions/RepositoryException";
 import { MySqlUser } from "./Dtos/MySqlUser";
 
 export class UserRepository implements IUserRepository {

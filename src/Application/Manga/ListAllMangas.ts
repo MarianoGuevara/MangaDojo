@@ -18,8 +18,6 @@ export class ListAllMangas {
     }
    
     async execute(): Promise<ListAllMagasOutputDTO[]> {
-        // validar token de usuario
-
         const mangas = await this.mangaRepository.getAll();
 
         const responseDtos = mangas.map(manga => ({

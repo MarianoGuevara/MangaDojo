@@ -42,4 +42,12 @@ export class Validator {
                 break;
         }
     }
+
+    static validateDateLogic(date: Date, fieldName: string): Date {
+        const now = new Date();
+        if (date > now) {
+            throw new ValidationException(`${fieldName} cannot be in the future`);
+        }
+        return date;
+    }
 }

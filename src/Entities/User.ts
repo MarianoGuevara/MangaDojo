@@ -76,14 +76,19 @@ export class User {
         Validator.validateType("string", email);
         Validator.stringMin(email, "email", 5);
         Validator.stringMax(email, "email", 75);
-        
-        // VALIDAR Q SEA UN EMAIL VALIDO
+
+
+        // a-z-0-9 | @ | a-z-. | . | a-z
+        const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!EMAIL_REGEX.test(email)) { // .test metodo de regex
+            throw new ValidationException("Invalid email format");
+        }
         
         return email;
     }
 
     private validateLogicDate(createdAt: Date): Date {
-        // validar que sea una fecha valida; que sea menor a la fecha actual; que no sea una fecha futura
+        Validator.validateDateLogic(createdAt, "user creation date");
         return createdAt;
     }
     private validateRole(role: string): Role {
