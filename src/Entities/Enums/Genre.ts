@@ -1,0 +1,17 @@
+export enum Genre {
+    Action = "Action",
+    Adventure = "Adventure",
+    Comedy = "Comedy",
+    Drama = "Drama",
+    Fantasy = "Fantasy",
+    SciFi = "Sci-Fi",
+    Mystery = "Mystery",
+    Romance = "Romance",
+    SliceOfLife = "Slice of Life",
+    Horror = "Horror",
+    Supernatural = "Supernatural",
+    Sports = "Sports",
+    Psychological = "Psychological",
+    Mecha = "Mecha",
+    Isekai = "Isekai",
+}

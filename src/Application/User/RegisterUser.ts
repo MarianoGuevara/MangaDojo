@@ -4,6 +4,7 @@ import { User } from "../../Entities/User";
 import { Validator } from "../../Entities/Shared/Validator";
 import { AlreadyExistsException } from "../../Entities/Exceptions/AlreadyExistsException";
 import { ValidationException } from "../../Entities/Exceptions/ValidationException";
+import { Role } from "../../Entities/Enums/Role";
 
 export interface RegisterUserInput {
     name: string;

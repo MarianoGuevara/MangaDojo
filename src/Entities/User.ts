@@ -1,5 +1,6 @@
 import { ValidationException } from "./Exceptions/ValidationException";
 import { Validator } from "./Shared/Validator";
+import { Role } from "./Enums/Role";
 
 export class User {
     private id: number;
@@ -7,9 +8,12 @@ export class User {
     private surname: string;
     private nickname: string;
     private email: string;
-    private password: string;
+    private passwordHash: string;
     private createdAt: Date;
     private role: Role;
+    private bornAt: Date;
+    private profilePicture: string;
+    private isActive: boolean;
 
     public get Id(): number {
         return this.id;
@@ -30,7 +34,10 @@ export class User {
         return this.email;
     }
     public get Password(): string {
-        return this.password;
+        return this.passwordHash;
+    }
+    public get PasswordHash(): string {
+        return this.passwordHash;
     }
     public get CreatedAt(): Date {
         return this.createdAt;
@@ -38,8 +45,17 @@ export class User {
     public get Role(): Role {
         return this.role;
     }
+    public get BornAt(): Date {
+        return this.bornAt;
+    }
+    public get ProfilePicture(): string {
+        return this.profilePicture;
+    }
+    public get IsActive(): boolean {
+        return this.isActive;
+    }
 
-    constructor(id: number, name: string, surname: string, nickname: string, email: string, password: string, createdAt: Date, role: Role) {
+    constructor(id: number, name: string, surname: string, nickname: string, email: string, passwordHash: string, createdAt: Date, role: Role, bornAt: Date, profilePicture: string, isActive: boolean) {
         this.id = id;
     
         this.name = this.validateName(name);
@@ -49,7 +65,10 @@ export class User {
         this.createdAt = this.validateLogicDate(createdAt);
         this.role = this.validateRole(role);
 
-        this.password = password; // ya le llega hasheada por eso no valida
+        this.passwordHash = passwordHash; // ya le llega hasheada por eso no valida
+        this.bornAt = bornAt;
+        this.profilePicture = profilePicture;
+        this.isActive = isActive;
     }
 
     private validateName(name: string): string {

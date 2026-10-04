@@ -1,13 +1,24 @@
 import { Author } from "../../../Entities/Author";
+import { AuthorGet } from "../../../Application/Author/AuthorReadDtos/AuthorGet";
+import { MySqlAuthorRow } from "./Dtos/MySqlAuthorRow";
 import { MySqlAuthor } from "./Dtos/MySqlAuthor";
 
 export class AuthorMapper {
-    toEntityFromAuthor(author: MySqlAuthor): Author {
-        return new Author(
+    toReadDtoFromRow(author: MySqlAuthorRow): AuthorGet {
+        return new AuthorGet(
+            author.id,
             author.name,
             author.surname,
-            author.nickname,
-            author.id
+            author.nickname
         )
+    }
+
+    toMySqlAuthorFromEntity(author: Author): MySqlAuthor {
+        return new MySqlAuthor(
+            author.Id,
+            author.Name,
+            author.Surname,
+            author.Nickname
+        );
     }
 }

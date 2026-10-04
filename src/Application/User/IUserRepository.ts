@@ -1,7 +1,8 @@
 import { User } from "../../Entities/User";
+import { UserGet } from "./UserReadDtos/UserGet";
 
 export interface IUserRepository {
-    getAll(): Promise<User[]>;
-    findByEmail(email: string): Promise<User | undefined>;
+    getAll(): Promise<UserGet[]>;
+    findByEmail(email: string): Promise<UserGet | undefined>;
     save(user: User): Promise<User>;
 }

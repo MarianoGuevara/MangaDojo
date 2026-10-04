@@ -1,15 +1,15 @@
-import { IMangaRepository } from "./IMangaRepository";
-import { Manga } from "../../Entities/Manga";
+import { IMangaRepositoryRead } from "./IMangaRepository";
+import { MangaGet } from "./MangaReadDtos/MangaGet";
 import { ValidationException } from "../../Entities/Exceptions/ValidationException";
 
 export class ListOneManga {
-    private mangaRepository: IMangaRepository;
+    private mangaReadRepository: IMangaRepositoryRead;
     
-    constructor(mangaRepository: IMangaRepository) {
-        this.mangaRepository = mangaRepository;
+    constructor(mangaReadRepository: IMangaRepositoryRead) {
+        this.mangaReadRepository = mangaReadRepository;
     }
     
-    async execute(id: number): Promise<Manga> {
+    async execute(id: number): Promise<MangaGet> {
         throw new ValidationException("GetByIdMangaUseCase is not implemented yet");
     }
 }

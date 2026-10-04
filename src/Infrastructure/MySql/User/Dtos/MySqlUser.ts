@@ -1,3 +1,5 @@
+import { Role } from "../../../../Entities/Enums/Role";
+
 export class MySqlUser {
     id: number;
     name: string;

@@ -3,17 +3,21 @@ import { ValidationException } from "./Exceptions/ValidationException";
 import { DateException } from "./Exceptions/DateException";
 import { Author } from "./Author";
 import { Validator } from "./Shared/Validator";
+import { Genre } from "./Enums/Genre";
+import { Demographic } from "./Enums/Demographic";
 
 export class Manga {
-    // poner de atributo SOLO si hay alguna regla de negocio
     private id: number;
     private title: string;
     private description: string;
-    private author: Author;
     private startDate: Date;
     private endDate: Date | null;
+    private authorId: number;
+    private cover: string;
+    private demographic: Demographic;
+    private volumes: Volume[];
+    private genres: Genre[];
     private totalVolumes: number;
-    private totalRating: number;
 
     public get Id(): number {
         return this.id;
@@ -27,8 +31,8 @@ export class Manga {
     public get Description(): string {
         return this.description;
     }
-    public get Author(): Author {
-        return this.author;
+    public get AuthorId(): number {
+        return this.authorId;
     }
     public get StartDate(): Date {
         return this.startDate;
@@ -36,24 +40,38 @@ export class Manga {
     public get EndDate(): Date | null {
         return this.endDate;
     }
+    public get Cover(): string {
+        return this.cover;
+    }
+    public get Demographic(): Demographic {
+        return this.demographic;
+    }
+    public get Volumes(): Volume[] {
+        return this.volumes;
+    }
+    public get Genres(): Genre[] {
+        return this.genres;
+    }
     public get TotalVolumes(): number {
         return this.totalVolumes;
     }
-    public get TotalRating(): number {
-        return this.totalRating;
-    }
 
-    constructor(title: string, description: string, author: Author, startDate: Date, endDate: Date | null, totalVolumes: number, totalRating: number, id?: number) {
-        this.id = id ?? 0;
+    constructor(id: number, title: string, description: string, startDate: Date, endDate: Date | null, authorId: number, cover: string, demographic: Demographic, volumes: Volume[], genres: Genre[], totalVolumes: number) {
+        this.id = id;
 
         this.title = this.validateTitle(title);
         this.description = this.validateDescription(description);
-        this.author = this.validateAuthor(author);
         this.startDate = this.validateStartDate(startDate);
         this.endDate = this.validateEndDate(endDate);
 
+        this.cover = cover;
         this.totalVolumes = totalVolumes;
-        this.totalRating = totalRating;
+
+        this.authorId = authorId; // validar q exista
+        this.volumes = volumes;
+
+        this.demographic = demographic;
+        this.genres = genres;
     }
 
     private validateTitle(title: string): string { 
@@ -68,11 +86,6 @@ export class Manga {
         Validator.stringMin(description, "description", 15);
         Validator.stringMax(description, "description", 250);
         return description;
-    }
-
-    private validateAuthor(author: Author): Author {
-        this.validateSpecificType("author", author);
-        return author;
     }
 
     private validateStartDate(startDate: Date): Date {
@@ -93,15 +106,5 @@ export class Manga {
             throw new DateException("End date cannot be before start date");
         }
         return endDate;
-    }
-    
-    validateSpecificType(correctType: string, field: any): void {
-         switch (correctType) {
-            case "author":
-                if (!(field instanceof Author)) {
-                    throw new ValidationException(`${field} must be an Author`);
-                }
-                break;
-        }
-    }
+    }    
 }   

@@ -1,9 +1,11 @@
 import { User } from "../../../Entities/User";
 import { MySqlUser } from "./Dtos/MySqlUser";
+import { MySqlUserRow } from "./Dtos/MySqlUserRow";
+import { UserGet } from "../../../Application/User/UserReadDtos/UserGet";
 
 export class UserMapper {
-    toEntityFromUser(user: MySqlUser): User {
-        return new User(
+    toReadDtoFromRow(user: MySqlUserRow): UserGet {
+        return new UserGet(
             user.id,
             user.name,
             user.surname,
@@ -15,14 +17,14 @@ export class UserMapper {
         )
     }
 
-    toUserFromEntity(user: User): MySqlUser {
+    toMySqlUserFromEntity(user: User): MySqlUser {
         return new MySqlUser(
             user.Id,
             user.Name,
             user.Surname,
             user.Nickname,
             user.Email,
-            user.Password,
+            user.PasswordHash,
             user.CreatedAt,
             user.Role
         )

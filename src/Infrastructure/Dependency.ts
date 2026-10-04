@@ -30,7 +30,8 @@ container.register({
     authorController: asClass(AuthorController).singleton(),
     userController: asClass(UserController).singleton(),
     
-    mangaRepository: asClass(MangaRepository).singleton(),
+    mangaReadRepository: asClass(MangaRepository).singleton(),
+    mangaWriteRepository: asClass(MangaRepository).singleton(),
     authorRepository: asClass(AuthorRepository).singleton(),
     userRepository: asClass(UserRepository).singleton(),
     

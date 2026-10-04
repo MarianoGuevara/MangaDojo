@@ -5,7 +5,8 @@ import { User } from "../../../Entities/User";
 import { IUserRepository } from "../../../Application/User/IUserRepository";
 import { UserMapper } from "./UserMapper";
 import { RepositoryException } from "../../Exceptions/RepositoryException";
-import { MySqlUser } from "./Dtos/MySqlUser";
+import { MySqlUserRow } from "./Dtos/MySqlUserRow";
+import { UserGet } from "../../../Application/User/UserReadDtos/UserGet";
 
 export class UserRepository implements IUserRepository {
     private pool: Pool;
@@ -16,11 +17,11 @@ export class UserRepository implements IUserRepository {
         this.userMapper = userMapper;
     }
 
-    async getAll(): Promise<User[]> {
+    async getAll(): Promise<UserGet[]> {
         throw new RepositoryException("getAll method is not implemented yet");
     }
 
-    async findByEmail(email: string): Promise<User | undefined> {
+    async findByEmail(email: string): Promise<UserGet | undefined> {
         try {
             const sql = `
             SELECT
@@ -40,8 +41,8 @@ export class UserRepository implements IUserRepository {
             if (rows.length === 0) {
                 return undefined;
             } else {
-                const userRow = rows[0] as MySqlUser; // casteo implicito de mysqlrow a mi firma. Si hay que hacer casteo explicito, aca
-                return this.userMapper.toEntityFromUser(userRow);
+                const userRow = rows[0] as MySqlUserRow;
+                return this.userMapper.toReadDtoFromRow(userRow);
             }
         } catch (error: any) {
             throw new RepositoryException("Error en la base de datos MySql: " + error.message);
@@ -50,7 +51,7 @@ export class UserRepository implements IUserRepository {
 
     async save(user: User): Promise<User> {
         try {
-            const sqlUser = this.userMapper.toUserFromEntity(user);
+            const sqlUser = this.userMapper.toMySqlUserFromEntity(user);
             
             const sql = `
             INSERT INTO users (name, surname, nickname, email, password, created_at, role)

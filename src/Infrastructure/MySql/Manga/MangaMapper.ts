@@ -1,30 +1,33 @@
 import { Manga } from "../../../Entities/Manga";
-import { Author } from "../../../Entities/Author";
-import { MySqlMangaWithAuthor } from "./Dtos/MySqlMangaWithAuthor";
+import { MySqlMangaRow } from "./Dtos/MySqlMangaRow";
 import { MySqlManga } from "./Dtos/MySqlManga";
+import { MangaGet } from "../../../Application/Manga/MangaReadDtos/MangaGet";
+import { MySqlMangaTitleRow } from "./Dtos/MySqlMangaTitleRow";
+import { MangaTitleGet } from "../../../Application/Manga/MangaReadDtos/MangaTitleGet";
+import { Genre } from "../../../Entities/Enums/Genre";
 
 export class MangaMapper{
-    toEntityFromMangaWithAuthor(manga: MySqlMangaWithAuthor): Manga {
-        const author = new Author(
-            manga.author_name, 
-            manga.author_surname, 
-            manga.author_nickname, 
-            manga.author_id
-        );
-
-        return new Manga(
+    toReadDtoFromRow(manga: MySqlMangaRow): MangaGet {
+        return new MangaGet(
+            manga.id,
             manga.title,
             manga.description,
-            author,
             manga.start_date,
             manga.end_date,
+            manga.author_name,
+            manga.author_surname,
+            manga.cover,
+            manga.demographic,
             manga.total_volumes,
-            manga.total_rating,
-            manga.author_id
+            manga.genres.split(',') as Genre[]
         );
     }
 
-    toMangaFromEntity(manga: Manga): MySqlManga {
+    toTitleReadDtoFromRow(manga: MySqlMangaTitleRow): MangaTitleGet {
+        return new MangaTitleGet(manga.id, manga.title);
+    }
+
+    toMySqlMangaFromEntity(manga: Manga): MySqlManga {
         return new MySqlManga(
             manga.Id,
             manga.Title,
@@ -32,8 +35,8 @@ export class MangaMapper{
             manga.StartDate,
             manga.EndDate,
             manga.TotalVolumes,
-            manga.TotalRating,
-            manga.Author.Id
-        )
+            0,
+            manga.AuthorId
+        );
     }
 }

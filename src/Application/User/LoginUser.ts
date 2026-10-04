@@ -40,7 +40,7 @@ export class LoginUserUseCase {
         
         const isPasswordValid = await this.passwordHasher.compare(
             input.password,
-            user.Password
+            user.passwordHash
         );
 
         if (isPasswordValid == false) {
@@ -48,15 +48,15 @@ export class LoginUserUseCase {
         }
 
         const token = this.tokenProvider.generateToken({
-            userId: user.Id,
-            email: user.Email
+            userId: user.id,
+            email: user.email
         });
         
         return {
             token,
             user: {
-                email: user.Email,
-                name: user.Name
+                email: user.email,
+                name: user.name
             }
         };
     }
