@@ -12,20 +12,21 @@ export class MangaGet {
     totalVolumes: number;
     genres?: Genre[];
 
-    authorname: string;
-    authorsurname: string;
+    authorFullName: string;
 
-    constructor(id: number, title: string, description: string, startDate: Date, endDate: Date | null, authorname: string, authorsurname: string, cover: string, demographic: Demographic, totalVolumes: number, genres?: Genre[]) {
+    rating: number | null; 
+
+    constructor(id: number, title: string, description: string, startDate: Date, endDate: Date | null, authorFullName: string, cover: string, demographic: Demographic, totalVolumes: number, genres?: Genre[], rating: number | null = null) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.authorname = authorname;
-        this.authorsurname = authorsurname;
+        this.authorFullName = authorFullName;
         this.cover = cover;
         this.demographic = demographic;
         this.totalVolumes = totalVolumes;
         this.genres = genres;
+        this.rating = rating;
     }
 }

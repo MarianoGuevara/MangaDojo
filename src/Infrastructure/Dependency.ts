@@ -17,6 +17,8 @@ import { UserRepository } from "./MySql/User/UserRepository";
 import { BcryptPasswordHasher } from "./Bcryptjs/BcryptPasswordHasher";
 import { JwtTokenProvider } from "./JsonWebToken/JsonWebToken";
 import { UserMapper } from "./MySql/User/UserMapper";
+import { ListAllAuthors } from "../Application/Author/ListAllAuthors";
+import { ListAllUsers } from "../Application/User/ListAllUsers";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -32,8 +34,10 @@ container.register({
     
     mangaReadRepository: asClass(MangaRepository).singleton(),
     mangaWriteRepository: asClass(MangaRepository).singleton(),
-    authorRepository: asClass(AuthorRepository).singleton(),
-    userRepository: asClass(UserRepository).singleton(),
+    authorReadRepository: asClass(AuthorRepository).singleton(),
+    authorWriteRepository: asClass(AuthorRepository).singleton(),
+    userReadRepository: asClass(UserRepository).singleton(),
+    userWriteRepository: asClass(UserRepository).singleton(),
     
     mangaMapper: asClass(MangaMapper).singleton(),
     authorMapper: asClass(AuthorMapper).singleton(),
@@ -42,6 +46,8 @@ container.register({
     getAllMangasUseCase: asClass(ListAllMangas).singleton(),
 	  insertOneMangaUseCase: asClass(UploadOneManga).singleton(),
     uploadOneAuthorUseCase: asClass(UploadOneAuthor).singleton(),
+    listAllAuthorsUseCase: asClass(ListAllAuthors).singleton(),
+    listAllUsersUseCase: asClass(ListAllUsers).singleton(),
 
     registerUserUseCase: asClass(RegisterUserUseCase).singleton(),
     loginUserUseCase: asClass(LoginUserUseCase).singleton(),

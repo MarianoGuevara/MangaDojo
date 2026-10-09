@@ -1,7 +1,7 @@
 import { InvalidCredentialsException } from "../../Entities/Exceptions/InvalidCredentialsException";
 import { IHasher } from "../Shared/IHasher";
 import { ITokenService } from "./IJsonWebToken";
-import { IUserRepository } from "./IUserRepository";
+import { IUserRepositoryRead } from "./IUserRepository";
 
 export interface LoginUserInput {
     email: string;
@@ -17,25 +17,29 @@ export interface LoginUserOutput {
 }
 
 export class LoginUserUseCase {
-    private userRepository: IUserRepository;
+    private userReadRepository: IUserRepositoryRead;
     private passwordHasher: IHasher;
     private tokenProvider: ITokenService;
     
     constructor(
-        userRepository: IUserRepository,
+        userReadRepository: IUserRepositoryRead,
         passwordHasher: IHasher,
         tokenProvider: ITokenService
     ) {
-        this.userRepository = userRepository;
+        this.userReadRepository = userReadRepository;
         this.passwordHasher = passwordHasher;
         this.tokenProvider = tokenProvider;
     }
 
     async execute(input: LoginUserInput): Promise<LoginUserOutput> {
-        const user = await this.userRepository.findByEmail(input.email);
+        const user = await this.userReadRepository.findByEmail(input.email);
         
         if (user == undefined) {
             throw new InvalidCredentialsException("Mail does not exist");
+        }
+
+        if (user.passwordHash === undefined) {
+            throw new InvalidCredentialsException("Password hash is not available");
         }
         
         const isPasswordValid = await this.passwordHasher.compare(

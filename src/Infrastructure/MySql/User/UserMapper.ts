@@ -13,7 +13,9 @@ export class UserMapper {
             user.email,
             user.password,
             user.created_at,
-            user.role
+            user.role,
+            user.born_at,
+            user.profile_picture
         )
     }
 
@@ -26,7 +28,9 @@ export class UserMapper {
             user.Email,
             user.PasswordHash,
             user.CreatedAt,
-            user.Role
+            user.Role,
+            user.BornAt,
+            user.ProfilePicture
         )
     }
 }

@@ -1,5 +1,5 @@
-import { IAuthorRepository } from "../../../Application/Author/IAuthorRepository";
-import { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
+import { IAuthorRepositoryRead, IAuthorRepositoryWrite } from "../../../Application/Author/IAuthorRepository";
+import { Pool, ResultSetHeader } from "mysql2/promise";
 import { AuthorMapper } from "./AuthorMapper";
 import { Author } from "../../../Entities/Author";
 import { MySqlAuthor } from "./Dtos/MySqlAuthor";
@@ -7,7 +7,7 @@ import { MySqlAuthorRow } from "./Dtos/MySqlAuthorRow";
 import { AuthorGet } from "../../../Application/Author/AuthorReadDtos/AuthorGet";
 import { RepositoryException } from "../../Exceptions/RepositoryException";
 
-export class AuthorRepository implements IAuthorRepository {
+export class AuthorRepository implements IAuthorRepositoryRead, IAuthorRepositoryWrite {
     private pool: Pool;
     private authorMapper: AuthorMapper;
 
@@ -16,8 +16,17 @@ export class AuthorRepository implements IAuthorRepository {
         this.authorMapper = authorMapper;
     }
 
-    getAll(): Promise<AuthorGet[]> {
-        throw new Error("Not implemented yet");
+    async getAll(): Promise<AuthorGet[]> {
+        try {
+            const sql = `
+            SELECT id, name, surname, nickname
+            FROM authors;
+            `;
+            const [rows] = await this.pool.query<MySqlAuthorRow[]>(sql);
+            return rows.map((row) => this.authorMapper.toReadDtoFromRow(row));
+        } catch (error: any) {
+            throw new RepositoryException("Error en la base de datos MySql: " + error.message);
+        }
     }
 
     async getByNameAndSurname(name: string, surname: string): Promise<AuthorGet | null>  {
@@ -28,13 +37,12 @@ export class AuthorRepository implements IAuthorRepository {
             `;
             const values = [name, surname];
 
-            const [rows] = await this.pool.query<RowDataPacket[]>(sql, values);
+            const [rows] = await this.pool.query<MySqlAuthorRow[]>(sql, values);
             
             if (rows.length === 0) {
                 return null;
             } else {
-                const authorRow = rows[0] as MySqlAuthorRow;
-                return this.authorMapper.toReadDtoFromRow(authorRow);
+                return this.authorMapper.toReadDtoFromRow(rows[0]);
             }
             
         } catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
@@ -48,13 +56,12 @@ export class AuthorRepository implements IAuthorRepository {
             `;
             const values = [id];
 
-            const [rows] = await this.pool.query<RowDataPacket[]>(sql, values);
+            const [rows] = await this.pool.query<MySqlAuthorRow[]>(sql, values);
             console.log("rows: ", rows);
             if (rows.length === 0) {
                 return null;
             } else {
-                const authorRow = rows[0] as MySqlAuthorRow;
-                return this.authorMapper.toReadDtoFromRow(authorRow);
+                return this.authorMapper.toReadDtoFromRow(rows[0]);
             }
 
         } catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }

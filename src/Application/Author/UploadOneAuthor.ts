@@ -1,5 +1,5 @@
 import { Author } from "../../Entities/Author";
-import { IAuthorRepository } from "./IAuthorRepository";
+import { IAuthorRepositoryRead, IAuthorRepositoryWrite } from "./IAuthorRepository";
 import { DuplicateException } from "../../Entities/Exceptions/DuplicateException";
 
 export interface UploadOneAuthorInputDTO {
@@ -13,10 +13,12 @@ export interface UploadOneAuthorResponseDTO {
 }
 
 export class UploadOneAuthor {
-    private authorRepository: IAuthorRepository;
+    private authorReadRepository: IAuthorRepositoryRead;
+    private authorWriteRepository: IAuthorRepositoryWrite;
 
-    constructor(authorRepository: IAuthorRepository) {
-        this.authorRepository = authorRepository;
+    constructor(authorReadRepository: IAuthorRepositoryRead, authorWriteRepository: IAuthorRepositoryWrite) {
+        this.authorReadRepository = authorReadRepository;
+        this.authorWriteRepository = authorWriteRepository;
     }
 
     async execute(authorDto: UploadOneAuthorInputDTO): Promise<UploadOneAuthorResponseDTO> {
@@ -26,14 +28,14 @@ export class UploadOneAuthor {
             authorDto.nickname
         )
 
-        const repositoryAuthor = await this.authorRepository.getByNameAndSurname(
+        const repositoryAuthor = await this.authorReadRepository.getByNameAndSurname(
             author.Name, 
             author.Surname
         );
         
         if (repositoryAuthor == null) {
             
-            const savedAuthor = await this.authorRepository.insertOne(author);
+            const savedAuthor = await this.authorWriteRepository.insertOne(author);
             
             return {
                 id: savedAuthor.Id

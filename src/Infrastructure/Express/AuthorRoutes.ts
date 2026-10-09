@@ -12,6 +12,12 @@ export const authorRoutes = (
 
   const auth = authMiddleware(tokenService);
 
+  router.get("/", auth, async (req, res) => {
+      const httpRequest = ExpressMapper.toHttpRequest(req);
+      const httpResponse = await authorController.getAll(httpRequest);
+      ExpressMapper.toExpressResponse(res, httpResponse);
+  });
+
   router.post("/", 
     auth, 
     async (req, res) => {

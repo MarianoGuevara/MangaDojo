@@ -1,6 +1,6 @@
 // RowDataPacket: el obj q mysql te devuelve cuando haces un select
 // ResultSetHeader: el obj q mysql te devuelve cuando haces un insert, update o delete
-import { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
+import { Pool, ResultSetHeader } from "mysql2/promise";
 import { IMangaRepositoryRead, IMangaRepositoryWrite } from "../../../Application/Manga/IMangaRepository";
 import { MySqlMangaRow } from "./Dtos/MySqlMangaRow";
 import { MySqlManga } from "./Dtos/MySqlManga";
@@ -8,8 +8,6 @@ import { Manga } from "../../../Entities/Manga";
 import { MangaMapper } from "./MangaMapper";
 import { RepositoryException } from "../../Exceptions/RepositoryException";
 import { MangaGet } from "../../../Application/Manga/MangaReadDtos/MangaGet";
-import { MangaTitleGet } from "../../../Application/Manga/MangaReadDtos/MangaTitleGet";
-import { MySqlMangaTitleRow } from "./Dtos/MySqlMangaTitleRow";
 
 export class MangaRepository implements IMangaRepositoryRead, IMangaRepositoryWrite {
 	private pool: Pool;
@@ -32,7 +30,7 @@ export class MangaRepository implements IMangaRepositoryRead, IMangaRepositoryWr
 				m.total_volumes,
 				m.cover,
 				m.demographic,
-				CONCAT(a.name, ' ', a.surname) AS author_name, 
+				CONCAT(a.name, ' ', a.surname) AS author_fullname, 
 				GROUP_CONCAT(g.genre_name SEPARATOR ',') AS genres
 			FROM mangas AS m
 			INNER JOIN authors AS a 
@@ -43,16 +41,19 @@ export class MangaRepository implements IMangaRepositoryRead, IMangaRepositoryWr
 			;
 			`;
 
-			const [rows] = await this.pool.query<RowDataPacket[]>(sql);
+			// Ya que mi interfaz hereda de rowdatapacket, 
+			// que es el tipo de dato que devuelve mysql, 
+			// puedo castear el resultado de la query a un array de mi interfaz
+			// const [rows] = await this.pool.query<RowDataPacket[]>(sql);
+			const [rows] = await this.pool.query<MySqlMangaRow[]>(sql);
 			
 			return rows.map((row) => {
-				const mangaRow = row as MySqlMangaRow;
-				return this.mangaMapper.toReadDtoFromRow(mangaRow);
+				return this.mangaMapper.toReadDtoFromRow(row);
 			});
 		} catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
 	}
 
-	async getByTitle(title: string): Promise<MangaTitleGet | null> {	
+	async getByTitle(title: string): Promise<MangaGet | null> {	
 		try{
 			const sql = `
 			SELECT 
@@ -62,23 +63,35 @@ export class MangaRepository implements IMangaRepositoryRead, IMangaRepositoryWr
 				m.start_date, 
 				m.end_date,
 				m.total_volumes,
-				m.total_rating,
-				a.name as author_name, 
-				a.surname as author_surname,
-				a.nickname as author_nickname
-			FROM mangas m
-			JOIN authors a ON m.mangas_id_author = a.id
-			WHERE m.title = ?;
+				m.cover,
+				m.demographic,
+				CONCAT(a.name, ' ', a.surname) AS author_fullname, 
+				GROUP_CONCAT(g.genre_name SEPARATOR ',') AS genres
+			FROM mangas AS m
+			INNER JOIN authors AS a 
+				ON m.mangas_id_author = a.id
+			INNER JOIN genres as g
+				ON g.manga_id = m.id
+			GROUP BY 
+				m.id,
+				m.title, 
+				m.description, 
+				m.start_date, 
+				m.end_date,
+				m.total_volumes,
+				m.cover,
+				m.demographic
+			HAVING m.title = ?;
 			`;
 			const values = [title];
 
-			const [rows] = await this.pool.query<RowDataPacket[]>(sql, values);
+			const [rows] = await this.pool.query<MySqlMangaRow[]>(sql, values);
 		
 			if (rows.length === 0) {
 				return null;
 			} else {
-				const mangaRow = rows[0] as MySqlMangaTitleRow;
-				return this.mangaMapper.toTitleReadDtoFromRow(mangaRow);
+				const mangaRow = rows[0];
+				return this.mangaMapper.toReadDtoFromRow(mangaRow);
 			}
 		} catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
 	}
@@ -103,9 +116,8 @@ export class MangaRepository implements IMangaRepositoryRead, IMangaRepositoryWr
 			];
 			
 			const [result] = await this.pool.query<ResultSetHeader>(sql, values);
-
-		
 			manga.Id = result.insertId
+
 			return manga;
 		} catch (error: any) { throw new RepositoryException("Error en la base de datos MySql: " + error.message); }
   	}

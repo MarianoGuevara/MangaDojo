@@ -1,4 +1,4 @@
-import { IUserRepository } from "./IUserRepository";
+import { IUserRepositoryRead, IUserRepositoryWrite } from "./IUserRepository";
 import { IHasher } from "../Shared/IHasher";
 import { User } from "../../Entities/User";
 import { Validator } from "../../Entities/Shared/Validator";
@@ -13,6 +13,9 @@ export interface RegisterUserInput {
     email: string;
     password: string;
     role: Role;
+    bornAt: Date;
+    profilePicture: string;
+
 }
 
 export interface RegisterUserOutput {
@@ -22,18 +25,21 @@ export interface RegisterUserOutput {
 }
 
 export class RegisterUserUseCase {
-    private userRepository: IUserRepository;
+    private userReadRepository: IUserRepositoryRead;
+    private userWriteRepository: IUserRepositoryWrite;
     private passwordHasher: IHasher;
     constructor(
-         userRepository: IUserRepository,
+         userReadRepository: IUserRepositoryRead,
+         userWriteRepository: IUserRepositoryWrite,
          passwordHasher: IHasher
     ) {
-        this.userRepository = userRepository;
+        this.userReadRepository = userReadRepository;
+        this.userWriteRepository = userWriteRepository;
         this.passwordHasher = passwordHasher;
     }
 
     async execute(input: RegisterUserInput): Promise<RegisterUserOutput> {
-        const existingUser = await this.userRepository.findByEmail(input.email);
+        const existingUser = await this.userReadRepository.findByEmail(input.email);
 
         if (existingUser != undefined) {
             throw new AlreadyExistsException(`User with email ${input.email} already exists`);
@@ -51,10 +57,13 @@ export class RegisterUserUseCase {
             input.email,
             passwordHash,
             new Date(),
-            input.role
+            input.role,
+            input.bornAt,
+            input.profilePicture,
+            true            
         );
 
-        const savedUser = await this.userRepository.save(newUser);
+        const savedUser = await this.userWriteRepository.save(newUser);
 
         return {
             id: savedUser.Id,
@@ -68,7 +77,7 @@ export class RegisterUserUseCase {
         Validator.stringMin(password, "password", 8);
         Validator.stringMax(password, "password", 30);
 
-        //  password que contenga al menos una letra mayúscula, una letra minúscula, 
+        // password que contenga al menos una letra mayúscula, una letra minúscula, 
         // un número y un carácter especial
         const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
         if (!PASSWORD_REGEX.test(password)) {

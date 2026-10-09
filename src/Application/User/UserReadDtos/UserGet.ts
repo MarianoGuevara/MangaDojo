@@ -6,11 +6,13 @@ export class UserGet {
     surname: string;
     nickname: string;
     email: string;
-    passwordHash: string;
+    passwordHash?: string;
     createdAt: Date;
     role: Role;
+    bornAt: Date | null;
+    profilePicture: string | null;
 
-    constructor(id: number, name: string, surname: string, nickname: string, email: string, passwordHash: string, createdAt: Date, role: Role) {
+    constructor(id: number, name: string, surname: string, nickname: string, email: string, passwordHash: string | undefined, createdAt: Date, role: Role, bornAt: Date | null, profilePicture: string | null) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -19,5 +21,7 @@ export class UserGet {
         this.passwordHash = passwordHash;
         this.createdAt = createdAt;
         this.role = role;
+        this.bornAt = bornAt;
+        this.profilePicture = profilePicture;
     }
 }
